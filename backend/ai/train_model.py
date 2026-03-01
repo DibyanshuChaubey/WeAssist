@@ -163,7 +163,7 @@ def generate_synthetic_data(n_samples=500):
                     'priority': priority
                 })
                 issue_id += 1
-    /
+    
     df = pd.DataFrame(data_list)
     return df
 

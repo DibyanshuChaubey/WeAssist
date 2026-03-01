@@ -30,7 +30,7 @@ WeAssist has three main layers:
 
 ## Issue Lifecycle (Enforced)
 
-`reported → in_progress → resolved_by_admin → closed`
+`reported → in_progress → resolved_by_admin → confirmed by reporter → closed`
 
 Rules:
 - Students create issues
