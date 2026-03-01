@@ -53,7 +53,7 @@ Created by `flask init-db`:
 
 Issue lifecycle:
 
-`reported → in_progress → resolved_by_admin → closed`
+`reported → in_progress → resolved_by_admin → confirmed by issue Reporter → closed`
 
 Rules:
 - Admin can move issues up to `resolved_by_admin`
