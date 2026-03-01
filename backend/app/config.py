@@ -32,7 +32,11 @@ class ProductionConfig(Config):
     DEBUG = False
     TESTING = False
     # Ensure PostgreSQL is used in production
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'postgresql://user:password@localhost/hostel_system')
+    # Render uses postgres:// but SQLAlchemy needs postgresql://
+    database_url = os.getenv('DATABASE_URL', 'postgresql://user:password@localhost/hostel_system')
+    if database_url.startswith('postgres://'):
+        database_url = database_url.replace('postgres://', 'postgresql://', 1)
+    SQLALCHEMY_DATABASE_URI = database_url
 
 config = {
     'development': DevelopmentConfig,
