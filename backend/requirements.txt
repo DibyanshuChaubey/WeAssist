@@ -11,5 +11,5 @@ joblib==1.3.2
 
 # Production dependencies
 gunicorn==21.2.0
-# psycopg3 for better Python 3.14 support
-psycopg[binary]==3.2.12
+# psycopg2-binary for Python 3.11 LTS
+psycopg2-binary==2.9.9

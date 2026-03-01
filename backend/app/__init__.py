@@ -51,8 +51,8 @@ def create_app(config_name=None):
         db.session.rollback()
         return jsonify({'error': 'Internal server error'}), 500
     
-    with app.app_context():
-        db.create_all()
+    # Database tables will be created via CLI command: flask init-db
+    # Do not auto-create tables at startup
     
     return app
 
