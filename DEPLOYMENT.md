@@ -9,6 +9,23 @@
 
 ## Backend Deployment (Render)
 
+### Architecture Note
+
+**Models are trained locally and committed to repo** (`/models/*.pkl`)
+- `category_classifier.pkl` - Pre-trained issue categorization model
+- `priority_predictor.pkl` - Pre-trained issue priority prediction model
+
+This avoids compilation issues during cloud deployment. Models are loaded at runtime using joblib.
+
+**To retrain models locally:**
+```bash
+cd backend
+pip install -r requirements-dev.txt  # Includes pandas, scikit-learn
+python ai/train_model.py  # Trains and saves new models
+git add models/ && git commit -m "Update trained models"
+git push
+```
+
 ### 1. Push to GitHub
 
 Your code is already committed. Push it:
