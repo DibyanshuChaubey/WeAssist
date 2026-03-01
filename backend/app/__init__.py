@@ -15,7 +15,12 @@ def create_app(config_name=None):
     app.config.from_object(config[config_name])
     
     # Initialize extensions
-    db.init_app(app)
+    try:
+        db.init_app(app)
+    except Exception as e:
+        logging.warning(f"Database initialization warning: {e}")
+        logging.warning("App will start but database operations may fail until database is available")
+    
     JWTManager(app)
     CORS(app, origins=app.config['CORS_ORIGINS'])
     
