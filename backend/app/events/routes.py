@@ -53,7 +53,7 @@ def create_event():
     
     # Create event
     event = HostelEvent(
-        id=f"event-{uuid.uuid4()}",
+        id=str(uuid.uuid4()),
         title=data['title'],
         description=data['description'],
         event_type=event_type,
@@ -270,7 +270,7 @@ def register_for_event(event_id):
     
     # Create registration
     registration = EventRegistration(
-        id=f"reg-{uuid.uuid4()}",
+        id=str(uuid.uuid4()),
         event_id=event_id,
         student_id=student.id
     )
@@ -390,7 +390,7 @@ def add_registration_admin(event_id):
     
     # Create registration
     registration = EventRegistration(
-        id=f"reg-{uuid.uuid4()}",
+        id=str(uuid.uuid4()),
         event_id=event_id,
         student_id=student.id
     )

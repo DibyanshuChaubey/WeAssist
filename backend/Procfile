@@ -1,1 +1,1 @@
-web: python -m flask --app run.py db upgrade; python -m flask --app run.py bootstrap-admin-if-enabled; python -m flask --app run.py seed-demo-data-if-enabled; gunicorn run:app
+web: python -m flask --app run.py db upgrade && python -m flask --app run.py bootstrap-admin-if-enabled && python -m flask --app run.py seed-demo-data-if-enabled && gunicorn run:app

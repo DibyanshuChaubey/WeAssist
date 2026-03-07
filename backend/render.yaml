@@ -4,7 +4,7 @@ services:
     env: python
     runtime: python-3.11
     buildCommand: "pip install --upgrade pip && pip install -r requirements.txt"
-    startCommand: "python -m flask --app run.py db upgrade; python -m flask --app run.py bootstrap-admin-if-enabled; python -m flask --app run.py seed-demo-data-if-enabled; gunicorn run:app"
+    startCommand: "python -m flask --app run.py db upgrade && python -m flask --app run.py bootstrap-admin-if-enabled && python -m flask --app run.py seed-demo-data-if-enabled && gunicorn run:app"
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.8

@@ -158,7 +158,7 @@ def seed_demo_events() -> int:
             continue
 
         event = HostelEvent(
-            id=f"event-{uuid4()}",
+            id=str(uuid4()),
             title=payload['title'],
             description=payload['description'],
             event_type=payload['event_type'],
@@ -204,7 +204,7 @@ def seed_demo_issues() -> int:
             continue
 
         issue = HostelIssue(
-            id=f"issue-{uuid4()}",
+            id=str(uuid4()),
             title=payload['title'],
             description=payload['description'],
             category=payload['category'],

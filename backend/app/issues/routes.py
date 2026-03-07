@@ -11,8 +11,24 @@ from app.issues.ai_priority import PriorityAI
 import uuid
 from datetime import datetime
 import os
+from sqlalchemy.exc import ProgrammingError
 
 issues_bp = Blueprint('issues', __name__)
+
+
+def ensure_issue_image_column():
+    """Best-effort compatibility fix for existing DBs that predate image_url."""
+    try:
+        dialect = db.session.bind.dialect.name if db.session.bind else ''
+        if dialect == 'postgresql':
+            db.session.execute('ALTER TABLE issues ADD COLUMN IF NOT EXISTS image_url VARCHAR(500)')
+            db.session.commit()
+            return
+
+        db.session.execute('ALTER TABLE issues ADD COLUMN image_url VARCHAR(500)')
+        db.session.commit()
+    except Exception:
+        db.session.rollback()
 
 @issues_bp.errorhandler(APIError)
 def handle_error(error):
@@ -60,7 +76,7 @@ def create_issue(current_user=None):
     
     # Create issue
     issue = HostelIssue(
-        id=f"issue-{uuid.uuid4()}",
+        id=str(uuid.uuid4()),
         title=data['title'],
         description=data['description'],
         category=data['category'],
@@ -77,7 +93,7 @@ def create_issue(current_user=None):
     
     # Log status
     status_log = IssueStatusLog(
-        id=f"log-{uuid.uuid4()}",
+        id=str(uuid.uuid4()),
         issue_id=issue.id,
         old_status=None,
         new_status=IssueStatus.REPORTED,
@@ -157,9 +173,19 @@ def get_issues():
         except KeyError:
             raise ValidationError('Invalid priority filter')
     
-    pagination = query.order_by(HostelIssue.reported_date.desc()).paginate(
-        page=page, per_page=per_page, error_out=False
-    )
+    try:
+        pagination = query.order_by(HostelIssue.reported_date.desc()).paginate(
+            page=page, per_page=per_page, error_out=False
+        )
+    except ProgrammingError as e:
+        db.session.rollback()
+        if 'image_url' in str(e):
+            ensure_issue_image_column()
+            pagination = query.order_by(HostelIssue.reported_date.desc()).paginate(
+                page=page, per_page=per_page, error_out=False
+            )
+        else:
+            raise APIError(f'Failed to fetch issues: {str(e)}', 500)
     
     return jsonify({
         'issues': [issue.to_dict() for issue in pagination.items],
@@ -269,7 +295,7 @@ def update_issue_status(issue_id):
         issue.resolved_by_admin_date = datetime.utcnow()
 
     log = IssueStatusLog(
-        id=f"log-{uuid.uuid4()}",
+        id=str(uuid.uuid4()),
         issue_id=issue.id,
         old_status=old_status,
         new_status=new_status,
@@ -308,7 +334,7 @@ def move_to_progress(issue_id):
     
     # Log change
     log = IssueStatusLog(
-        id=f"log-{uuid.uuid4()}",
+        id=str(uuid.uuid4()),
         issue_id=issue.id,
         old_status=old_status,
         new_status=IssueStatus.IN_PROGRESS,
@@ -350,7 +376,7 @@ def mark_resolved(issue_id):
     
     # Log change
     log = IssueStatusLog(
-        id=f"log-{uuid.uuid4()}",
+        id=str(uuid.uuid4()),
         issue_id=issue.id,
         old_status=old_status,
         new_status=IssueStatus.RESOLVED_BY_ADMIN,
@@ -395,7 +421,7 @@ def confirm_resolution(issue_id):
     
     # Log change
     log = IssueStatusLog(
-        id=f"log-{uuid.uuid4()}",
+        id=str(uuid.uuid4()),
         issue_id=issue.id,
         old_status=old_status,
         new_status=IssueStatus.CLOSED,
@@ -465,7 +491,7 @@ def add_admin_note(issue_id):
         raise ValidationError('content field required')
     
     note = AdminNote(
-        id=f"note-{uuid.uuid4()}",
+        id=str(uuid.uuid4()),
         issue_id=issue.id,
         admin_id=admin.id,
         content=data['content']
