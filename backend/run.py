@@ -74,5 +74,61 @@ def bootstrap_admin_if_enabled():
     force_update = env_flag('BOOTSTRAP_ADMIN_FORCE_UPDATE', 'false')
     upsert_bootstrap_admin(force_update=force_update)
 
+
+def upsert_demo_student(force_update=False):
+    """Create or update demo student account for showcase purposes."""
+    email = os.getenv('DEMO_STUDENT_EMAIL', 'student.demo@hostel.com').strip().lower()
+    password = os.getenv('DEMO_STUDENT_PASSWORD', 'demo123')
+    name = os.getenv('DEMO_STUDENT_NAME', 'Demo Student')
+    hostel = os.getenv('DEMO_STUDENT_HOSTEL', 'A')
+
+    student = User.query.filter_by(email=email).first()
+    if student and not force_update:
+        print(f'Demo student already exists: {email}')
+        return True
+
+    if student:
+        student.name = name
+        student.password_hash = generate_password_hash(password)
+        student.role = UserRole.STUDENT
+        student.hostel = hostel
+        student.status = UserStatus.VERIFIED
+        db.session.commit()
+        print(f'Demo student updated: {email}')
+        return True
+
+    from uuid import uuid4
+    student = User(
+        id=str(uuid4()),
+        name=name,
+        email=email,
+        password_hash=generate_password_hash(password),
+        role=UserRole.STUDENT,
+        hostel=hostel,
+        status=UserStatus.VERIFIED,
+    )
+    db.session.add(student)
+    db.session.commit()
+    print(f'Demo student created: {email}')
+    return True
+
+
+@app.cli.command('seed-demo-student')
+def seed_demo_student():
+    """Create or update demo student account from environment variables."""
+    force_update = env_flag('DEMO_STUDENT_FORCE_UPDATE', 'false')
+    upsert_demo_student(force_update=force_update)
+
+
+@app.cli.command('seed-demo-student-if-enabled')
+def seed_demo_student_if_enabled():
+    """Conditionally seed demo student if SEED_DEMO_STUDENT=true."""
+    if not env_flag('SEED_DEMO_STUDENT', 'false'):
+        print('SEED_DEMO_STUDENT is false; skipping demo student seeding.')
+        return
+
+    force_update = env_flag('DEMO_STUDENT_FORCE_UPDATE', 'false')
+    upsert_demo_student(force_update=force_update)
+
 if __name__ == '__main__':
     app.run(debug=os.getenv('FLASK_ENV', 'development') == 'development')

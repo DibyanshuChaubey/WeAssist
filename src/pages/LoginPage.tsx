@@ -77,6 +77,31 @@ export const LoginPage: React.FC = () => {
     }
   };
 
+  const handleDemoLogin = async (email: string, password: string) => {
+    setLoading(true);
+    setError('');
+    setPending(false);
+    try {
+      const res = await fetch(`${API_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Login failed');
+      if (data.user.status === 'pending_verification') {
+        setPending(true);
+        return;
+      }
+      login({ ...data.user, token: data.access_token });
+      navigate(data.user.role === 'admin' ? '/admin' : '/');
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
@@ -123,6 +148,29 @@ export const LoginPage: React.FC = () => {
               <button type="submit" disabled={loading} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
                 <LogIn size={18} /> Sign In
               </button>
+
+              {/* Demo Login Buttons */}
+              <div className="mt-6 pt-6 border-t border-gray-200">
+                <p className="text-xs text-gray-500 uppercase font-semibold mb-3 text-center">Quick Demo Access</p>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => handleDemoLogin('admin@hostel.com', '555555')}
+                    disabled={loading}
+                    className="bg-indigo-100 hover:bg-indigo-200 text-indigo-800 font-semibold py-2 px-3 rounded-lg transition-colors text-sm disabled:opacity-50"
+                  >
+                    👨‍💼 Admin
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleDemoLogin('student.demo@hostel.com', 'demo123')}
+                    disabled={loading}
+                    className="bg-green-100 hover:bg-green-200 text-green-800 font-semibold py-2 px-3 rounded-lg transition-colors text-sm disabled:opacity-50"
+                  >
+                    👨‍🎓 Student
+                  </button>
+                </div>
+              </div>
             </form>
           ) : (
             <form onSubmit={handleRegister}>
