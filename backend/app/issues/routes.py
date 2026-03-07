@@ -1,14 +1,16 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 from flask_jwt_extended import verify_jwt_in_request, get_jwt_identity
 from app.models import (
     db, HostelIssue, IssueStatus, IssueStatusLog, AdminNote,
     User, UserRole, IssuePriority, UserStatus
 )
+from app.demo_seed import seed_demo_data
 from app.utils.decorators import verify_hostel_student, verify_admin, verify_verified_authenticated
 from app.utils.errors import ValidationError, AuthorizationError, NotFoundError, ConflictError, APIError, handle_api_error
 from app.issues.ai_priority import PriorityAI
 import uuid
 from datetime import datetime
+import os
 
 issues_bp = Blueprint('issues', __name__)
 
@@ -105,6 +107,19 @@ def get_issues():
     
     if not user:
         raise ValidationError('User not found')
+
+    auto_seed = os.getenv('SEED_DEMO_DATA_ON_DEMAND', 'true').lower() in ('1', 'true', 'yes')
+    if auto_seed:
+        try:
+            if HostelIssue.query.count() == 0:
+                result = seed_demo_data(force_update_student=False, reset=False)
+                current_app.logger.warning(
+                    f"Demo data auto-seeded from issues endpoint | "
+                    f"events={result['createdEvents']} issues={result['createdIssues']}"
+                )
+        except Exception as e:
+            db.session.rollback()
+            current_app.logger.warning(f"Demo auto-seed skipped in issues endpoint: {str(e)}")
     
     query = HostelIssue.query
     

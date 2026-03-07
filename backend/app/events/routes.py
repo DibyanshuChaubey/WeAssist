@@ -1,10 +1,12 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 from flask_jwt_extended import verify_jwt_in_request, get_jwt_identity
 from datetime import datetime
+import os
 from app.models import (
     db, HostelEvent, EventRegistration, EventType, RegistrationStatus,
     User, UserRole
 )
+from app.demo_seed import seed_demo_data
 
 from app.models import UserStatus
 from app.utils.errors import ValidationError, AuthorizationError, NotFoundError, ConflictError, APIError, handle_api_error
@@ -89,6 +91,20 @@ def get_events():
     except Exception:
         pass
     
+    # Safety fallback for showcase deployments where startup seeding didn't run
+    auto_seed = os.getenv('SEED_DEMO_DATA_ON_DEMAND', 'true').lower() in ('1', 'true', 'yes')
+    if auto_seed:
+        try:
+            if HostelEvent.query.count() == 0:
+                result = seed_demo_data(force_update_student=False, reset=False)
+                current_app.logger.warning(
+                    f"Demo data auto-seeded from events endpoint | "
+                    f"events={result['createdEvents']} issues={result['createdIssues']}"
+                )
+        except Exception as e:
+            db.session.rollback()
+            current_app.logger.warning(f"Demo auto-seed skipped in events endpoint: {str(e)}")
+
     # Pagination
     page = request.args.get('page', 1, type=int)
     per_page = request.args.get('per_page', 10, type=int)
