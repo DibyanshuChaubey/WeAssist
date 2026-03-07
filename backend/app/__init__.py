@@ -6,6 +6,22 @@ from app.models import db
 import os
 import logging
 
+
+def bootstrap_database(app):
+    """Create tables if possible; keep app running if DB is temporarily unavailable."""
+    auto_init_enabled = os.getenv('AUTO_INIT_DB', 'true').lower() in ('1', 'true', 'yes')
+    if not auto_init_enabled:
+        app.logger.info('AUTO_INIT_DB disabled; skipping database bootstrap')
+        return
+
+    try:
+        with app.app_context():
+            db.create_all()
+        app.logger.info('Database bootstrap completed (db.create_all)')
+    except Exception as e:
+        app.logger.warning(f'Database bootstrap warning: {e}')
+        app.logger.warning('App will keep running; initialize DB manually with flask init-db if needed')
+
 def create_app(config_name=None):
     """Application factory"""
     if config_name is None:
@@ -26,6 +42,9 @@ def create_app(config_name=None):
     
     # Setup logging
     setup_logging(app)
+
+    # Best-effort DB bootstrap for fresh deployments
+    bootstrap_database(app)
     
     # Register blueprints
     from app.auth import auth_bp
@@ -50,10 +69,7 @@ def create_app(config_name=None):
     def internal_error(error):
         db.session.rollback()
         return jsonify({'error': 'Internal server error'}), 500
-    
-    # Database tables will be created via CLI command: flask init-db
-    # Do not auto-create tables at startup
-    
+
     return app
 
 def setup_logging(app):

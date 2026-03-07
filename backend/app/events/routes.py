@@ -9,6 +9,7 @@ from app.models import (
 from app.models import UserStatus
 from app.utils.errors import ValidationError, AuthorizationError, NotFoundError, ConflictError, APIError, handle_api_error
 import uuid
+from sqlalchemy.exc import SQLAlchemyError, ProgrammingError
 
 events_bp = Blueprint('events', __name__)
 
@@ -84,9 +85,9 @@ def get_events():
     try:
         verify_jwt_in_request(optional=True)
         user_id = get_jwt_identity()
-        current_user = User.query.get(user_id) if user_id else None
-    except:
-        current_user = None
+        _ = User.query.get(user_id) if user_id else None
+    except Exception:
+        pass
     
     # Pagination
     page = request.args.get('page', 1, type=int)
@@ -96,23 +97,40 @@ def get_events():
     event_type = request.args.get('event_type')
     registration_status = request.args.get('registration_status')
     
-    query = HostelEvent.query
-    
-    if event_type:
+    def build_query():
+        query = HostelEvent.query
+
+        if event_type:
+            try:
+                query = query.filter_by(event_type=EventType[event_type.upper()])
+            except KeyError:
+                raise ValidationError('Invalid event_type filter')
+
+        if registration_status:
+            try:
+                query = query.filter_by(registration_status=RegistrationStatus[registration_status.upper()])
+            except KeyError:
+                raise ValidationError('Invalid registration_status filter')
+
+        return query
+
+    try:
+        pagination = build_query().order_by(HostelEvent.date.asc()).paginate(
+            page=page, per_page=per_page, error_out=False
+        )
+    except ProgrammingError:
+        db.session.rollback()
         try:
-            query = query.filter_by(event_type=EventType[event_type.upper()])
-        except KeyError:
-            raise ValidationError('Invalid event_type filter')
-    
-    if registration_status:
-        try:
-            query = query.filter_by(registration_status=RegistrationStatus[registration_status.upper()])
-        except KeyError:
-            raise ValidationError('Invalid registration_status filter')
-    
-    pagination = query.order_by(HostelEvent.date.asc()).paginate(
-        page=page, per_page=per_page, error_out=False
-    )
+            db.create_all()
+            pagination = build_query().order_by(HostelEvent.date.asc()).paginate(
+                page=page, per_page=per_page, error_out=False
+            )
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            raise APIError(f'Database not initialized: {str(e)}', 500)
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        raise APIError(f'Failed to fetch events: {str(e)}', 500)
     
     return jsonify({
         'events': [event.to_dict() for event in pagination.items],
