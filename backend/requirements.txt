@@ -6,6 +6,7 @@ Flask-Migrate==4.0.7
 Werkzeug==2.3.7
 SQLAlchemy==1.4.50
 python-dotenv==1.0.0
+requests==2.32.3
 
 # Runtime only - for loading pre-trained models
 joblib==1.3.2

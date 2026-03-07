@@ -4,6 +4,7 @@ import { Header } from '../components';
 import { Plus, Edit2, Trash2, Users, Calendar, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { getApiBaseUrl } from '../utils/apiBaseUrl';
+import { uploadService } from '../services/api';
 
 const API_URL = getApiBaseUrl();
 
@@ -45,6 +46,7 @@ export const AdminEventsManagement: React.FC = () => {
   );
   const [selectedEventForStudents, setSelectedEventForStudents] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [imageUploading, setImageUploading] = useState(false);
 
   const filteredEvents = useMemo(() => {
     if (!searchQuery) return events;
@@ -141,6 +143,22 @@ export const AdminEventsManagement: React.FC = () => {
       }
     } catch {
       alert('Failed to delete event');
+    }
+  };
+
+  const handleEventImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setImageUploading(true);
+    try {
+      const data = await uploadService.uploadImage(file, 'weassist/events');
+      setFormData((prev) => ({ ...prev, imageUrl: data.url || '' }));
+    } catch {
+      alert('Image upload failed');
+    } finally {
+      setImageUploading(false);
+      e.target.value = '';
     }
   };
 
@@ -405,6 +423,18 @@ export const AdminEventsManagement: React.FC = () => {
                   placeholder="https://..."
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
+                <div className="mt-2">
+                  <label className="inline-flex items-center px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-sm font-medium text-gray-700 cursor-pointer transition-colors">
+                    <input
+                      type="file"
+                      accept="image/png,image/jpeg,image/jpg,image/webp"
+                      className="hidden"
+                      onChange={handleEventImageUpload}
+                      disabled={imageUploading}
+                    />
+                    {imageUploading ? 'Uploading image...' : 'Upload Image'}
+                  </label>
+                </div>
                 {formData.imageUrl && (
                   <div className="mt-3 rounded-lg border border-gray-200 overflow-hidden">
                     <img

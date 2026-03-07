@@ -52,6 +52,14 @@ services:
         value: https://your-frontend-url.vercel.app
       - key: CORS_ALLOW_VERCEL_PREVIEWS
         value: true
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: UPLOAD_MAX_MB
+        value: 8
     
 databases:
   - name: weassist-db

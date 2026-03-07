@@ -1,7 +1,7 @@
 // Issue Submission Form Component
 
 import React, { useState } from 'react';
-import { issuesService } from '../services/api';
+import { issuesService, uploadService } from '../services/api';
 
 const ISSUE_CATEGORIES = [
   'Electrical',
@@ -50,6 +50,7 @@ export const IssueSubmissionForm: React.FC<IssueSubmissionFormProps> = ({
   });
 
   const [loading, setLoading] = useState(false);
+  const [imageUploading, setImageUploading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
@@ -126,6 +127,23 @@ export const IssueSubmissionForm: React.FC<IssueSubmissionFormProps> = ({
       );
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setError('');
+    setImageUploading(true);
+    try {
+      const data = await uploadService.uploadImage(file, 'weassist/issues');
+      setFormData((prev) => ({ ...prev, imageUrl: data.url || '' }));
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Image upload failed');
+    } finally {
+      setImageUploading(false);
+      e.target.value = '';
     }
   };
 
@@ -230,6 +248,18 @@ export const IssueSubmissionForm: React.FC<IssueSubmissionFormProps> = ({
             placeholder="https://..."
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+          <div className="mt-2">
+            <label className="inline-flex items-center px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-sm font-medium text-gray-700 cursor-pointer transition-colors">
+              <input
+                type="file"
+                accept="image/png,image/jpeg,image/jpg,image/webp"
+                className="hidden"
+                onChange={handleImageUpload}
+                disabled={imageUploading}
+              />
+              {imageUploading ? 'Uploading image...' : 'Upload Image'}
+            </label>
+          </div>
           {formData.imageUrl && (
             <div className="mt-3 rounded-md border border-gray-200 overflow-hidden">
               <img
