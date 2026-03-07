@@ -4,7 +4,7 @@ services:
     env: python
     runtime: python-3.11
     buildCommand: "pip install --upgrade pip && pip install -r requirements.txt"
-    startCommand: "python -m flask --app run.py init-db; gunicorn run:app"
+    startCommand: "python -m flask --app run.py db upgrade; python -m flask --app run.py bootstrap-admin-if-enabled; gunicorn run:app"
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.8
@@ -12,12 +12,18 @@ services:
         value: production
       - key: JWT_SECRET_KEY
         generateValue: true
-      - key: SEED_ADMIN_PASSWORD
-        generateValue: true
-      - key: SEED_STUDENT_PASSWORD
-        generateValue: true
-      - key: SEED_FORCE_UPDATE
-        value: false
+      - key: BOOTSTRAP_ADMIN_EMAIL
+        value: admin@hostel.com
+      - key: BOOTSTRAP_ADMIN_NAME
+        value: System Admin
+      - key: BOOTSTRAP_ADMIN_HOSTEL
+        value: A
+      - key: BOOTSTRAP_ADMIN_PASSWORD
+        value: 555555
+      - key: BOOTSTRAP_ADMIN_ON_START
+        value: true
+      - key: BOOTSTRAP_ADMIN_FORCE_UPDATE
+        value: true
       - key: DATABASE_URL
         fromDatabase:
           name: weassist-db

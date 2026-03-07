@@ -1,26 +1,13 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
+from flask_migrate import Migrate
 from app.config import config
 from app.models import db
 import os
 import logging
 
-
-def bootstrap_database(app):
-    """Create tables if possible; keep app running if DB is temporarily unavailable."""
-    auto_init_enabled = os.getenv('AUTO_INIT_DB', 'true').lower() in ('1', 'true', 'yes')
-    if not auto_init_enabled:
-        app.logger.info('AUTO_INIT_DB disabled; skipping database bootstrap')
-        return
-
-    try:
-        with app.app_context():
-            db.create_all()
-        app.logger.info('Database bootstrap completed (db.create_all)')
-    except Exception as e:
-        app.logger.warning(f'Database bootstrap warning: {e}')
-        app.logger.warning('App will keep running; initialize DB manually with flask init-db if needed')
+migrate = Migrate()
 
 def create_app(config_name=None):
     """Application factory"""
@@ -36,6 +23,8 @@ def create_app(config_name=None):
     except Exception as e:
         logging.warning(f"Database initialization warning: {e}")
         logging.warning("App will start but database operations may fail until database is available")
+
+    migrate.init_app(app, db)
     
     JWTManager(app)
     CORS(
@@ -48,9 +37,6 @@ def create_app(config_name=None):
     
     # Setup logging
     setup_logging(app)
-
-    # Best-effort DB bootstrap for fresh deployments
-    bootstrap_database(app)
     
     # Register blueprints
     from app.auth import auth_bp

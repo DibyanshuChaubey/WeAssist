@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from flask import current_app
 from flask_jwt_extended import create_access_token
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.models import db, User, UserRole, UserStatus
@@ -16,11 +17,11 @@ def normalize_email(email):
 
 
 def try_seed_password_recovery(user, provided_password):
-    """Recover seeded user password from env vars if hash is out of sync."""
+    """Recover bootstrap/seeded user password from env vars if hash is out of sync."""
     if not user or not provided_password:
         return False
 
-    admin_seed_password = os.getenv('SEED_ADMIN_PASSWORD')
+    admin_seed_password = os.getenv('BOOTSTRAP_ADMIN_PASSWORD') or os.getenv('SEED_ADMIN_PASSWORD')
     student_seed_password = os.getenv('SEED_STUDENT_PASSWORD')
 
     seed_admin_emails = {'admin@hostel.com', 'admin2@hostel.com'}
@@ -34,11 +35,13 @@ def try_seed_password_recovery(user, provided_password):
     if user.email in seed_admin_emails and admin_seed_password and provided_password == admin_seed_password:
         user.password_hash = generate_password_hash(admin_seed_password)
         db.session.commit()
+        current_app.logger.warning(f"Recovered password hash for seeded admin account: {user.email}")
         return True
 
     if user.email in seed_student_emails and student_seed_password and provided_password == student_seed_password:
         user.password_hash = generate_password_hash(student_seed_password)
         db.session.commit()
+        current_app.logger.warning(f"Recovered password hash for seeded student account: {user.email}")
         return True
 
     return False
@@ -108,6 +111,7 @@ def login():
     user = User.query.filter_by(email=email).first()
 
     if not user:
+        current_app.logger.warning(f"Login failed: user not found ({email})")
         raise AuthenticationError('Invalid email or password')
 
     password_ok = check_password_hash(user.password_hash, password)
@@ -115,6 +119,7 @@ def login():
         password_ok = try_seed_password_recovery(user, password)
 
     if not password_ok:
+        current_app.logger.warning(f"Login failed: invalid password ({email})")
         raise AuthenticationError('Invalid email or password')
     
     access_token = create_access_token(identity=user.id)
