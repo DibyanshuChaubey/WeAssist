@@ -46,6 +46,45 @@ def try_seed_password_recovery(user, provided_password):
 
     return False
 
+
+def try_bootstrap_admin_creation(email, provided_password):
+    """Create bootstrap admin on-demand when login is attempted and admin record is missing."""
+    allow_on_login = os.getenv('BOOTSTRAP_ADMIN_ON_LOGIN', 'true').lower() in ('1', 'true', 'yes')
+    bootstrap_email = normalize_email(os.getenv('BOOTSTRAP_ADMIN_EMAIL', 'admin@hostel.com'))
+    bootstrap_password = os.getenv('BOOTSTRAP_ADMIN_PASSWORD')
+    bootstrap_name = os.getenv('BOOTSTRAP_ADMIN_NAME', 'System Admin')
+    bootstrap_hostel = os.getenv('BOOTSTRAP_ADMIN_HOSTEL', 'A')
+
+    if not allow_on_login:
+        return None
+
+    if not bootstrap_password:
+        return None
+
+    if email != bootstrap_email:
+        return None
+
+    if provided_password != bootstrap_password:
+        return None
+
+    existing_admin = User.query.filter_by(email=bootstrap_email).first()
+    if existing_admin:
+        return existing_admin
+
+    user = User(
+        id=str(uuid.uuid4()),
+        name=bootstrap_name,
+        email=bootstrap_email,
+        password_hash=generate_password_hash(bootstrap_password),
+        role=UserRole.ADMIN,
+        hostel=bootstrap_hostel,
+        status=UserStatus.VERIFIED,
+    )
+    db.session.add(user)
+    db.session.commit()
+    current_app.logger.warning(f"Bootstrap admin created on login fallback: {bootstrap_email}")
+    return user
+
 @auth_bp.errorhandler(APIError)
 def handle_error(error):
     return handle_api_error(error)
@@ -109,6 +148,9 @@ def login():
         raise ValidationError('Email and password required')
     
     user = User.query.filter_by(email=email).first()
+
+    if not user:
+        user = try_bootstrap_admin_creation(email, password)
 
     if not user:
         current_app.logger.warning(f"Login failed: user not found ({email})")
