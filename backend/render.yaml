@@ -4,7 +4,7 @@ services:
     env: python
     runtime: python-3.11
     buildCommand: "pip install --upgrade pip && pip install -r requirements.txt"
-    startCommand: "gunicorn run:app"
+    startCommand: "python -m flask --app run.py init-db; gunicorn run:app"
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.8

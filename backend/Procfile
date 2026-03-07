@@ -1,1 +1,1 @@
-web: gunicorn run:app
+web: python -m flask --app run.py init-db; gunicorn run:app
