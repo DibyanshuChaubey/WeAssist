@@ -23,6 +23,7 @@ def try_seed_password_recovery(user, provided_password):
 
     admin_seed_password = os.getenv('BOOTSTRAP_ADMIN_PASSWORD') or os.getenv('SEED_ADMIN_PASSWORD')
     student_seed_password = os.getenv('SEED_STUDENT_PASSWORD')
+    demo_student_password = os.getenv('DEMO_STUDENT_PASSWORD')
 
     seed_admin_emails = {'admin@hostel.com', 'admin2@hostel.com'}
     seed_student_emails = {
@@ -42,6 +43,15 @@ def try_seed_password_recovery(user, provided_password):
         user.password_hash = generate_password_hash(student_seed_password)
         db.session.commit()
         current_app.logger.warning(f"Recovered password hash for seeded student account: {user.email}")
+        return True
+
+    demo_student_email = normalize_email(os.getenv('DEMO_STUDENT_EMAIL', 'student.demo@hostel.com'))
+    if user.email == demo_student_email and demo_student_password and provided_password == demo_student_password:
+        user.password_hash = generate_password_hash(demo_student_password)
+        user.role = UserRole.STUDENT
+        user.status = UserStatus.VERIFIED
+        db.session.commit()
+        current_app.logger.warning(f"Recovered password hash for demo student account: {user.email}")
         return True
 
     return False
@@ -83,6 +93,45 @@ def try_bootstrap_admin_creation(email, provided_password):
     db.session.add(user)
     db.session.commit()
     current_app.logger.warning(f"Bootstrap admin created on login fallback: {bootstrap_email}")
+    return user
+
+
+def try_bootstrap_demo_student_creation(email, provided_password):
+    """Create demo student on-demand when login is attempted and demo student record is missing."""
+    allow_on_login = os.getenv('DEMO_STUDENT_ON_LOGIN', 'true').lower() in ('1', 'true', 'yes')
+    demo_email = normalize_email(os.getenv('DEMO_STUDENT_EMAIL', 'student.demo@hostel.com'))
+    demo_password = os.getenv('DEMO_STUDENT_PASSWORD', 'demo123')
+    demo_name = os.getenv('DEMO_STUDENT_NAME', 'Demo Student')
+    demo_hostel = os.getenv('DEMO_STUDENT_HOSTEL', 'A')
+
+    if not allow_on_login:
+        return None
+
+    if not demo_password:
+        return None
+
+    if email != demo_email:
+        return None
+
+    if provided_password != demo_password:
+        return None
+
+    existing_student = User.query.filter_by(email=demo_email).first()
+    if existing_student:
+        return existing_student
+
+    user = User(
+        id=str(uuid.uuid4()),
+        name=demo_name,
+        email=demo_email,
+        password_hash=generate_password_hash(demo_password),
+        role=UserRole.STUDENT,
+        hostel=demo_hostel,
+        status=UserStatus.VERIFIED,
+    )
+    db.session.add(user)
+    db.session.commit()
+    current_app.logger.warning(f"Demo student created on login fallback: {demo_email}")
     return user
 
 @auth_bp.errorhandler(APIError)
@@ -151,6 +200,9 @@ def login():
 
     if not user:
         user = try_bootstrap_admin_creation(email, password)
+
+    if not user:
+        user = try_bootstrap_demo_student_creation(email, password)
 
     if not user:
         current_app.logger.warning(f"Login failed: user not found ({email})")
