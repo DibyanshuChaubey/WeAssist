@@ -3,8 +3,9 @@ import { EventType, RegistrationStatus, HostelEvent } from '../types/index';
 import { EventCard, EmptyState } from '../components';
 import { useAuth } from '../context/AuthContext';
 import { Search, Calendar, Award, LogIn } from 'lucide-react';
+import { getApiBaseUrl } from '../utils/apiBaseUrl';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_URL = getApiBaseUrl();
 const EVENTS_PER_PAGE = 6;
 
 export const EventsDashboard: React.FC = () => {

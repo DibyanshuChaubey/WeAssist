@@ -1,20 +1,9 @@
 // API Service for Hostel Issue Reporting System
 
 import axios from 'axios';
+import { getApiBaseUrl } from '../utils/apiBaseUrl';
 
-const resolveApiBaseUrl = () => {
-  const envUrl = import.meta.env.VITE_API_URL;
-  const fallbackUrl = 'http://localhost:5000/api';
-  const base = (envUrl || fallbackUrl).trim().replace(/\/+$/, '');
-
-  if (/\/api$/i.test(base)) {
-    return base;
-  }
-
-  return `${base}/api`;
-};
-
-const API_BASE_URL = resolveApiBaseUrl();
+const API_BASE_URL = getApiBaseUrl();
 
 // Create axios instance
 const api = axios.create({

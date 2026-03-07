@@ -10,8 +10,9 @@ import {
 import { filterIssues, getSortedIssues, getStats } from '../utils/filterUtils';
 import { useAuth } from '../context/AuthContext';
 import { AlertCircle, Plus, X } from 'lucide-react';
+import { getApiBaseUrl } from '../utils/apiBaseUrl';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_URL = getApiBaseUrl();
 const ISSUES_PER_PAGE = 6;
 
 export const IssuesDashboard: React.FC = () => {

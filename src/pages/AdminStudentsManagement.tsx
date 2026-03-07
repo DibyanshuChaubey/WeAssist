@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Header, Navigation } from '../components';
 import { useAuth } from '../context/AuthContext';
 import { CheckCircle2, Clock, AlertCircle, Loader, XCircle } from 'lucide-react';
+import { getApiBaseUrl } from '../utils/apiBaseUrl';
 
 interface PendingStudent {
   id: string;
@@ -12,7 +13,7 @@ interface PendingStudent {
   status: string;
 }
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_URL = getApiBaseUrl();
 
 export const AdminStudentsManagement: React.FC = () => {
   const { token } = useAuth();
