@@ -38,7 +38,13 @@ def create_app(config_name=None):
         logging.warning("App will start but database operations may fail until database is available")
     
     JWTManager(app)
-    CORS(app, origins=app.config['CORS_ORIGINS'])
+    CORS(
+        app,
+        resources={r"/api/*": {"origins": app.config['CORS_ORIGINS']}},
+        methods=['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+        allow_headers=['Content-Type', 'Authorization'],
+    )
+    app.logger.info(f"CORS configured for origins: {app.config['CORS_ORIGINS']}")
     
     # Setup logging
     setup_logging(app)

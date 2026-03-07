@@ -1,6 +1,20 @@
 import os
 from datetime import timedelta
 
+
+def _parse_cors_origins():
+    raw_origins = os.getenv(
+        'CORS_ORIGINS',
+        'http://localhost:3000,http://localhost:3001,http://localhost:5173'
+    )
+    origins = [origin.strip() for origin in raw_origins.split(',') if origin.strip()]
+
+    allow_vercel_previews = os.getenv('CORS_ALLOW_VERCEL_PREVIEWS', 'true').lower() in ('1', 'true', 'yes')
+    if allow_vercel_previews:
+        origins.append(r'^https://.*\.vercel\.app$')
+
+    return origins
+
 class Config:
     """Base configuration"""
     SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -8,7 +22,7 @@ class Config:
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=30)
     
     # CORS
-    CORS_ORIGINS = os.getenv('CORS_ORIGINS', 'http://localhost:3000,http://localhost:3001').split(',')
+    CORS_ORIGINS = _parse_cors_origins()
     
     # SQLite for development
     SQLALCHEMY_DATABASE_URI = os.getenv(
