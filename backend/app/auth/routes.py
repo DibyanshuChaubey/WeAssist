@@ -1,9 +1,10 @@
 from flask import Blueprint, request, jsonify
 from flask import current_app
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, verify_jwt_in_request, get_jwt_identity
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.models import db, User, UserRole, UserStatus
-from app.utils.errors import ValidationError, AuthenticationError, APIError, handle_api_error
+from app.utils.errors import ValidationError, AuthenticationError, AuthorizationError, APIError, handle_api_error
+from app.demo_seed import seed_demo_data
 import uuid
 import os
 
@@ -238,6 +239,33 @@ def get_current_user():
         raise ValidationError('User not found')
     
     return jsonify(user.to_dict()), 200
+
+
+@auth_bp.route('/demo/reset', methods=['POST'])
+def reset_demo_data():
+    """Admin endpoint: Reset and reseed showcase demo data in one click."""
+    verify_jwt_in_request()
+    user_id = get_jwt_identity()
+    admin = User.query.get(user_id)
+
+    if not admin or admin.role != UserRole.ADMIN:
+        raise AuthorizationError('Admin access required')
+
+    payload = request.get_json(silent=True) or {}
+    force_update_student = bool(payload.get('force_update_student', True))
+
+    result = seed_demo_data(force_update_student=force_update_student, reset=True)
+    current_app.logger.warning(
+        f"Demo data reset by admin={admin.email} | "
+        f"deleted_events={result['reset']['deletedEvents']} "
+        f"deleted_issues={result['reset']['deletedIssues']} "
+        f"created_events={result['createdEvents']} created_issues={result['createdIssues']}"
+    )
+
+    return jsonify({
+        'message': 'Demo data reset and reseeded successfully',
+        'result': result,
+    }), 200
 
 @auth_bp.route('/verify-user/<user_id>', methods=['POST'])
 def verify_user(user_id):
