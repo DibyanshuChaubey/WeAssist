@@ -20,6 +20,7 @@ interface IssueFormData {
   title: string;
   description: string;
   category: string;
+  imageUrl: string;
   location: {
     hostel: string;
     floor: number | '';
@@ -40,6 +41,7 @@ export const IssueSubmissionForm: React.FC<IssueSubmissionFormProps> = ({
     title: '',
     description: '',
     category: '',
+    imageUrl: '',
     location: {
       hostel: userHostel || '',
       floor: '',
@@ -107,6 +109,7 @@ export const IssueSubmissionForm: React.FC<IssueSubmissionFormProps> = ({
         title: '',
         description: '',
         category: '',
+        imageUrl: '',
         location: {
           hostel: userHostel || '',
           floor: '',
@@ -208,6 +211,37 @@ export const IssueSubmissionForm: React.FC<IssueSubmissionFormProps> = ({
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
+        </div>
+
+        {/* Image URL */}
+        <div>
+          <label
+            htmlFor="imageUrl"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Issue Image URL (Optional)
+          </label>
+          <input
+            type="url"
+            id="imageUrl"
+            name="imageUrl"
+            value={formData.imageUrl}
+            onChange={handleChange}
+            placeholder="https://..."
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          {formData.imageUrl && (
+            <div className="mt-3 rounded-md border border-gray-200 overflow-hidden">
+              <img
+                src={formData.imageUrl}
+                alt="Issue preview"
+                className="w-full h-48 object-cover"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+            </div>
+          )}
         </div>
 
         {/* Location */}

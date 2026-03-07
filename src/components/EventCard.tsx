@@ -14,6 +14,19 @@ export const EventCard: React.FC<EventCardProps> = ({ event, onClick }) => {
       className="bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md hover:border-gray-300 transition-all cursor-pointer h-full flex flex-col"
       onClick={() => onClick?.(event)}
     >
+      {event.imageUrl && (
+        <div className="mb-4 rounded-lg overflow-hidden border border-gray-200">
+          <img
+            src={event.imageUrl}
+            alt={event.title}
+            className="w-full h-40 object-cover"
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+            }}
+          />
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex-1">
         <h3 className="text-base font-bold text-gray-900 mb-2 line-clamp-2">{event.title}</h3>

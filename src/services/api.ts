@@ -107,13 +107,18 @@ export const issuesService = {
     title: string;
     description: string;
     category: string;
+    imageUrl?: string;
     location: {
       hostel: string;
       floor: number;
       room: string;
     };
   }) => {
-    const response = await api.post('/issues', issueData);
+    const payload = {
+      ...issueData,
+      image_url: issueData.imageUrl,
+    };
+    const response = await api.post('/issues', payload);
     return response.data;
   },
 

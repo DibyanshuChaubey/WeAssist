@@ -38,6 +38,7 @@ export interface HostelIssue {
   id: string;
   title: string;
   description: string;
+  imageUrl?: string;
   category: Category;
   status: Status;
   priority?: Priority;

@@ -67,6 +67,7 @@ def create_issue(current_user=None):
         status=IssueStatus.REPORTED,
         priority_ai_suggested=ai_priority,
         ai_reason=ai_reason,
+        image_url=data.get('image_url') or data.get('imageUrl'),
         priority_final=None,  # Admin sets this
         reporter_id=current_user.id,
         hostel=location['hostel'],

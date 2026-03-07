@@ -47,6 +47,19 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, onClick, onConfirmR
           <p className="text-sm text-gray-600 line-clamp-2 mb-4">{issue.description}</p>
         </div>
 
+        {issue.imageUrl && (
+          <div className="mb-4 rounded-lg overflow-hidden border border-gray-200">
+            <img
+              src={issue.imageUrl}
+              alt={issue.title}
+              className="w-full h-40 object-cover"
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+              }}
+            />
+          </div>
+        )}
+
         {/* Category and Location */}
         <div className="flex items-start justify-between mb-4 gap-2 flex-wrap">
           <CategoryTag category={issue.category} variant="filled" />

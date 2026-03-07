@@ -76,6 +76,7 @@ class HostelIssue(db.Model):
     priority_final = db.Column(db.Enum(IssuePriority), nullable=True)
     priority_ai_suggested = db.Column(db.Enum(IssuePriority), nullable=True)
     ai_reason = db.Column(db.Text, nullable=True)
+    image_url = db.Column(db.String(500), nullable=True)
     
     # Reporter Info
     reporter_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False, index=True)
@@ -105,6 +106,7 @@ class HostelIssue(db.Model):
             'priorityFinal': self.priority_final.value if self.priority_final else None,
             'priorityAiSuggested': self.priority_ai_suggested.value if self.priority_ai_suggested else None,
             'aiReason': self.ai_reason,
+            'imageUrl': self.image_url,
             'reporterId': self.reporter_id,
             'reporterName': self.reporter.name if self.reporter else None,
             'location': {

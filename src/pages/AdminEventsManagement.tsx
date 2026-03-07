@@ -78,15 +78,32 @@ export const AdminEventsManagement: React.FC = () => {
       alert('Please fill in all required fields');
       return;
     }
+
+    const payload = {
+      title: formData.title,
+      description: formData.description,
+      event_type: formData.eventType,
+      sports_type: formData.sportsType,
+      date: formData.date,
+      start_time: formData.startTime,
+      end_time: formData.endTime,
+      venue: formData.venue,
+      registration_status: formData.registrationStatus,
+      total_slots: formData.totalSlots,
+      organizer: formData.organizer,
+      image_url: formData.imageUrl,
+    };
+
     try {
       let res: Response, data: any;
       if (editingEventId) {
         res = await fetch(`${API_URL}/events/${editingEventId}`, {
           method: 'PUT',
           headers: {
+            'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(payload),
         });
         if (!res.ok) throw new Error('Failed to update event');
         data = await res.json();
@@ -98,7 +115,7 @@ export const AdminEventsManagement: React.FC = () => {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(payload),
         });
         if (!res.ok) throw new Error('Failed to create event');
         data = await res.json();
@@ -371,6 +388,33 @@ export const AdminEventsManagement: React.FC = () => {
                       <option value="basketball">Basketball</option>
                       <option value="other">Other</option>
                     </select>
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Event Poster URL (Optional)
+                </label>
+                <input
+                  type="url"
+                  value={formData.imageUrl || ''}
+                  onChange={(e) =>
+                    setFormData({ ...formData, imageUrl: e.target.value })
+                  }
+                  placeholder="https://..."
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                {formData.imageUrl && (
+                  <div className="mt-3 rounded-lg border border-gray-200 overflow-hidden">
+                    <img
+                      src={formData.imageUrl}
+                      alt="Event preview"
+                      className="w-full h-44 object-cover"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
                   </div>
                 )}
               </div>
