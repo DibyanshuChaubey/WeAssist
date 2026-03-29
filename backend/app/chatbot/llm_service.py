@@ -1,5 +1,6 @@
 import os
 import logging
+import time
 from typing import Optional
 
 import requests
@@ -12,6 +13,8 @@ DEFAULT_FALLBACK_MODELS = [
     'meta-llama/llama-3.2-3b-instruct:free',
 ]
 _LLM_SETUP_WARNED = False
+_LLM_RATE_LIMITED_UNTIL = 0.0
+_LLM_LAST_RATE_LIMIT_LOG_AT = 0.0
 
 
 APP_KNOWLEDGE = """
@@ -90,12 +93,23 @@ def _parse_openrouter_error_message(response: requests.Response) -> str:
     return response.text[:220] if response.text else 'unknown OpenRouter error'
 
 
+def _is_openrouter_rate_limited(response: requests.Response, error_message: str) -> bool:
+    if response.status_code != 429:
+        return False
+
+    lowered = (error_message or '').lower()
+    return any(token in lowered for token in ('rate limit', 'free-models-per-day', 'too many requests', 'quota'))
+
+
 def generate_assistant_reply(
     user_message: str,
     additional_context: Optional[str] = None,
     max_tokens: int = 280,
 ) -> Optional[str]:
     """Call OpenRouter model and return generated text or None on failure."""
+    global _LLM_RATE_LIMITED_UNTIL
+    global _LLM_LAST_RATE_LIMIT_LOG_AT
+
     _warn_llm_setup_once()
 
     api_key = os.getenv('OPENROUTER_API_KEY')
@@ -104,6 +118,16 @@ def generate_assistant_reply(
 
     endpoint = os.getenv('OPENROUTER_API_URL', DEFAULT_OPENROUTER_URL)
     timeout_seconds = int(os.getenv('OPENROUTER_TIMEOUT_SECONDS', '20'))
+    cooldown_seconds = int(os.getenv('OPENROUTER_RATE_LIMIT_COOLDOWN_SECONDS', '900'))
+
+    now = time.time()
+    if now < _LLM_RATE_LIMITED_UNTIL:
+        # Log at most once per minute while in cooldown to avoid log noise.
+        if now - _LLM_LAST_RATE_LIMIT_LOG_AT > 60:
+            remaining = int(_LLM_RATE_LIMITED_UNTIL - now)
+            logging.warning(f'OpenRouter temporarily skipped due to previous rate limit. Cooldown remaining: {remaining}s')
+            _LLM_LAST_RATE_LIMIT_LOG_AT = now
+        return None
 
     prompt_text = APP_KNOWLEDGE
     if additional_context:
@@ -132,6 +156,15 @@ def generate_assistant_reply(
             response = requests.post(endpoint, json=payload, headers=headers, timeout=timeout_seconds)
             if response.status_code >= 400:
                 error_message = _parse_openrouter_error_message(response)
+                if _is_openrouter_rate_limited(response, error_message):
+                    _LLM_RATE_LIMITED_UNTIL = time.time() + max(60, cooldown_seconds)
+                    _LLM_LAST_RATE_LIMIT_LOG_AT = time.time()
+                    logging.warning(
+                        f'OpenRouter rate-limited for model={model}. '
+                        f'Entering cooldown for {max(60, cooldown_seconds)}s. '
+                        f'Error: {error_message}'
+                    )
+                    return None
                 logging.warning(f'OpenRouter call failed for model={model} status={response.status_code}: {error_message}')
                 continue
 
