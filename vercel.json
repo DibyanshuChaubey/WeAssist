@@ -11,6 +11,6 @@
     }
   ],
   "env": {
-    "VITE_API_URL": "https://your-backend-url.onrender.com/api"
+    "VITE_API_URL": "https://weassist-backend.onrender.com/api"
   }
 }
