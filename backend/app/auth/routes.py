@@ -17,6 +17,87 @@ def normalize_email(email):
     return email.strip().lower()
 
 
+def _is_demo_auth_enabled():
+    enabled_flag = os.getenv('DEMO_AUTH_ENABLED', 'true').lower() in ('1', 'true', 'yes')
+    env_name = os.getenv('FLASK_ENV', 'development').lower()
+    # Keep demo auth off in production unless explicitly enabled.
+    if env_name == 'production' and not enabled_flag:
+        return False
+    return enabled_flag
+
+
+def _ensure_demo_student_account():
+    demo_email = normalize_email(os.getenv('DEMO_STUDENT_EMAIL', 'student.demo@hostel.com'))
+    demo_password = os.getenv('DEMO_STUDENT_PASSWORD', 'demo123')
+    demo_name = os.getenv('DEMO_STUDENT_NAME', 'Demo Student')
+    demo_hostel = os.getenv('DEMO_STUDENT_HOSTEL', 'A')
+
+    user = User.query.filter_by(email=demo_email).first()
+    if user:
+        changed = False
+        if user.role != UserRole.STUDENT:
+            user.role = UserRole.STUDENT
+            changed = True
+        if user.status != UserStatus.VERIFIED:
+            user.status = UserStatus.VERIFIED
+            changed = True
+        if user.hostel != demo_hostel:
+            user.hostel = demo_hostel
+            changed = True
+        if changed:
+            db.session.commit()
+        return user
+
+    user = User(
+        id=str(uuid.uuid4()),
+        name=demo_name,
+        email=demo_email,
+        password_hash=generate_password_hash(demo_password),
+        role=UserRole.STUDENT,
+        hostel=demo_hostel,
+        status=UserStatus.VERIFIED,
+    )
+    db.session.add(user)
+    db.session.commit()
+    return user
+
+
+def _ensure_demo_admin_account():
+    admin_email = normalize_email(os.getenv('BOOTSTRAP_ADMIN_EMAIL', 'admin@hostel.com'))
+    admin_password = os.getenv('BOOTSTRAP_ADMIN_PASSWORD') or os.getenv('SEED_ADMIN_PASSWORD') or 'admin123'
+    admin_name = os.getenv('BOOTSTRAP_ADMIN_NAME', 'System Admin')
+    admin_hostel = os.getenv('BOOTSTRAP_ADMIN_HOSTEL', 'A')
+
+    user = User.query.filter_by(email=admin_email).first()
+    if user:
+        changed = False
+        if user.role != UserRole.ADMIN:
+            user.role = UserRole.ADMIN
+            changed = True
+        if user.status != UserStatus.VERIFIED:
+            user.status = UserStatus.VERIFIED
+            changed = True
+        if user.hostel != admin_hostel:
+            user.hostel = admin_hostel
+            changed = True
+        if changed:
+            db.session.commit()
+        return user
+
+    user = User(
+        id=str(uuid.uuid4()),
+        name=admin_name,
+        email=admin_email,
+        password_hash=generate_password_hash(admin_password),
+        role=UserRole.ADMIN,
+        hostel=admin_hostel,
+        status=UserStatus.VERIFIED,
+    )
+    db.session.add(user)
+    db.session.commit()
+    return user
+
+
 def try_seed_password_recovery(user, provided_password):
     """Recover bootstrap/seeded user password from env vars if hash is out of sync."""
     if not user or not provided_password:
@@ -223,6 +304,31 @@ def login():
         'message': 'Login successful',
         'access_token': access_token,
         'user': user.to_dict()
+    }), 200
+
+
+@auth_bp.route('/demo/login', methods=['POST'])
+def demo_login():
+    """Role-based demo login with auto-provisioned demo users."""
+    if not _is_demo_auth_enabled():
+        raise AuthorizationError('Demo authentication is disabled')
+
+    data = request.get_json(silent=True) or {}
+    role = (data.get('role') or '').strip().lower()
+
+    if role not in ('admin', 'student'):
+        raise ValidationError('role must be either admin or student')
+
+    if role == 'admin':
+        user = _ensure_demo_admin_account()
+    else:
+        user = _ensure_demo_student_account()
+
+    access_token = create_access_token(identity=user.id)
+    return jsonify({
+        'message': 'Demo login successful',
+        'access_token': access_token,
+        'user': user.to_dict(),
     }), 200
 
 @auth_bp.route('/me', methods=['GET'])

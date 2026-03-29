@@ -10,6 +10,8 @@ import { AdminDashboard } from './pages/AdminDashboard';
 import { AdminIssuesManagement } from './pages/AdminIssuesManagement';
 import { AdminEventsManagement } from './pages/AdminEventsManagement';
 import { AdminStudentsManagement } from './pages/AdminStudentsManagement';
+import { AssistantPage } from './pages/AssistantPage';
+import { FloatingChatbot } from './components/FloatingChatbot';
 import { Loader } from 'lucide-react';
 
 function AppContent() {
@@ -57,6 +59,15 @@ function AppContent() {
           }
         />
 
+        <Route
+          path="/assistant"
+          element={
+            <ProtectedRoute>
+              <AssistantPage />
+            </ProtectedRoute>
+          }
+        />
+
         {/* Protected Admin Routes */}
         <Route
           path="/admin"
@@ -94,6 +105,7 @@ function AppContent() {
           }
         />
       </Routes>
+      <FloatingChatbot />
     </div>
   );
 }

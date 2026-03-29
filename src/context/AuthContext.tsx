@@ -5,7 +5,7 @@ interface AuthContextType {
   currentUser: User | null;
   isAuthenticated: boolean;
   token: string | null;
-  login: (user: User & { token?: string }) => void;
+  login: (user: User & { token?: string }, options?: { storage?: 'local' | 'session' }) => void;
   logout: () => void;
   isAdmin: boolean;
   isStudent: boolean;
@@ -17,6 +17,14 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 // Helper: Synchronously restore auth from localStorage
 const restoreAuthFromStorage = () => {
   try {
+    const sessionToken = sessionStorage.getItem('authToken');
+    const sessionUser = sessionStorage.getItem('user');
+
+    if (sessionToken && sessionUser) {
+      const parsedUser = JSON.parse(sessionUser);
+      return { currentUser: parsedUser, token: sessionToken };
+    }
+
     const storedToken = localStorage.getItem('authToken');
     const stored = localStorage.getItem('user');
     
@@ -26,6 +34,8 @@ const restoreAuthFromStorage = () => {
     }
   } catch (error) {
     console.error('Failed to restore auth from storage:', error);
+    sessionStorage.removeItem('authToken');
+    sessionStorage.removeItem('user');
     localStorage.removeItem('authToken');
     localStorage.removeItem('user');
   }
@@ -46,23 +56,40 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  const login = useCallback((user: User & { token?: string }) => {
+  const login = useCallback((user: User & { token?: string }, options?: { storage?: 'local' | 'session' }) => {
     const { token: accessToken, ...userWithoutToken } = user;
+    const storageType = options?.storage ?? 'local';
     setCurrentUser(userWithoutToken as User);
-    
+
+    // Ensure only one storage source is active at a time.
+    sessionStorage.removeItem('authToken');
+    sessionStorage.removeItem('user');
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('user');
+
     if (accessToken) {
       setToken(accessToken);
-      localStorage.setItem('authToken', accessToken);
-      console.log('✓ Token stored');
+      if (storageType === 'session') {
+        sessionStorage.setItem('authToken', accessToken);
+      } else {
+        localStorage.setItem('authToken', accessToken);
+      }
+      console.log(`✓ Token stored (${storageType})`);
     }
-    
-    localStorage.setItem('user', JSON.stringify(userWithoutToken));
-    console.log('✓ User stored:', userWithoutToken);
+
+    if (storageType === 'session') {
+      sessionStorage.setItem('user', JSON.stringify(userWithoutToken));
+    } else {
+      localStorage.setItem('user', JSON.stringify(userWithoutToken));
+    }
+    console.log(`✓ User stored (${storageType}):`, userWithoutToken);
   }, []);
 
   const logout = useCallback(() => {
     setCurrentUser(null);
     setToken(null);
+    sessionStorage.removeItem('user');
+    sessionStorage.removeItem('authToken');
     localStorage.removeItem('user');
     localStorage.removeItem('authToken');
   }, []);

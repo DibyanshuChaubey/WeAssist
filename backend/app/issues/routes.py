@@ -65,6 +65,14 @@ def create_issue(current_user=None):
         if not location.get(field):
             raise ValidationError(f'location.{field} is required')
     
+    # Validate floor is numeric
+    try:
+        floor_num = int(location['floor'])
+        if floor_num < 0 or floor_num > 100:
+            raise ValidationError('Floor must be between 0 and 100')
+    except (ValueError, TypeError):
+        raise ValidationError('Floor must be a valid integer')
+    
     # Get AI priority suggestion
     ai_priority, ai_reason = PriorityAI.suggest_priority(
         data['title'],

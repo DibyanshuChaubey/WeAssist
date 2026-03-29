@@ -16,7 +16,7 @@ const api = axios.create({
 // Request interceptor to add auth token
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('authToken');
+    const token = sessionStorage.getItem('authToken') || localStorage.getItem('authToken');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -29,8 +29,15 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    const status = error.response?.status;
+    const message = String(error.response?.data?.msg || error.response?.data?.error || '');
+    const isJwtValidationError =
+      status === 422 && /(token|jwt|signature|segments|expired|authorization)/i.test(message);
+
+    if (status === 401 || isJwtValidationError) {
       // Token expired or invalid
+      sessionStorage.removeItem('authToken');
+      sessionStorage.removeItem('user');
       localStorage.removeItem('authToken');
       localStorage.removeItem('user');
       window.location.href = '/login';
@@ -65,19 +72,25 @@ export const authService = {
 
   // Logout
   logout: () => {
+    sessionStorage.removeItem('authToken');
+    sessionStorage.removeItem('user');
     localStorage.removeItem('authToken');
     localStorage.removeItem('user');
   },
 
   // Get current user
   getCurrentUser: () => {
+    const sessionUserStr = sessionStorage.getItem('user');
+    if (sessionUserStr) {
+      return JSON.parse(sessionUserStr);
+    }
     const userStr = localStorage.getItem('user');
     return userStr ? JSON.parse(userStr) : null;
   },
 
   // Check if authenticated
   isAuthenticated: () => {
-    return !!localStorage.getItem('authToken');
+    return !!(sessionStorage.getItem('authToken') || localStorage.getItem('authToken'));
   },
 };
 
@@ -228,6 +241,39 @@ export const uploadService = {
         'Content-Type': 'multipart/form-data',
       },
     });
+    return response.data;
+  },
+};
+
+// ==================== CHATBOT ====================
+
+export interface ChatbotIssueSummary {
+  id: string;
+  title: string;
+  status: string;
+  reportedDate?: string | null;
+  updatedDate?: string | null;
+}
+
+export interface ChatbotResponse {
+  type: 'status' | 'faq' | 'fallback';
+  source: string;
+  reply: string;
+  suggestions?: string[];
+  data?: {
+    faq_id?: string;
+    issues?: ChatbotIssueSummary[];
+    stats?: {
+      total: number;
+      open: number;
+      resolved_by_admin: number;
+    };
+  };
+}
+
+export const chatbotService = {
+  ask: async (message: string): Promise<ChatbotResponse> => {
+    const response = await api.post('/chatbot/ask', { message });
     return response.data;
   },
 };

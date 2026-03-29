@@ -42,11 +42,13 @@ def create_app(config_name=None):
     from app.auth import auth_bp
     from app.issues import issues_bp
     from app.events import events_bp
+    from app.chatbot import chatbot_bp
     from app.uploads import uploads_bp
     
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(issues_bp, url_prefix='/api/issues')
     app.register_blueprint(events_bp, url_prefix='/api/events')
+    app.register_blueprint(chatbot_bp, url_prefix='/api/chatbot')
     app.register_blueprint(uploads_bp, url_prefix='/api/uploads')
     
     # Health check endpoint
