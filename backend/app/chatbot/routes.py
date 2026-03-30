@@ -110,6 +110,65 @@ def _build_user_context(current_user):
     )
 
 
+def _role_based_suggestions(current_user, intent='fallback'):
+    if not current_user:
+        if intent == 'status':
+            return [
+                'Sign in and ask: What is my latest issue status?',
+                'How does account verification work?',
+                'How do event registrations work?',
+            ]
+        return [
+            'How does account verification work?',
+            'How do event registrations work?',
+            'Sign in and ask: What is my latest issue status?',
+        ]
+
+    if current_user.role == UserRole.ADMIN:
+        if intent == 'status':
+            return [
+                'Which open issues need immediate admin action?',
+                'Show issue lifecycle rules for admins',
+                'How can students close resolved issues?',
+            ]
+        if intent == 'faq':
+            return [
+                'How do I move reported issues to in_progress?',
+                'What should I check before marking resolved_by_admin?',
+                'Show issue lifecycle rules for admins',
+            ]
+        return [
+            'Which open issues need immediate admin action?',
+            'How do I update issue status correctly?',
+            'How can students close resolved issues?',
+        ]
+
+    if current_user.status == UserStatus.PENDING_VERIFICATION:
+        return [
+            'How does account verification work?',
+            'When can I report my first issue?',
+            'How do event registrations work?',
+        ]
+
+    if intent == 'status':
+        return [
+            'Show my last 3 issues',
+            'Check issue by ID',
+            'How do I close a resolved issue?',
+        ]
+    if intent == 'faq':
+        return [
+            'What is my latest issue status?',
+            'How do I report a new issue?',
+            'How do event registrations work?',
+        ]
+    return [
+        'What is my latest issue status?',
+        'How do I report a new issue?',
+        'How does verification work?',
+    ]
+
+
 @chatbot_bp.route('/ask', methods=['POST'])
 def ask_chatbot():
     try:
@@ -137,7 +196,7 @@ def ask_chatbot():
                 'type': 'status',
                 'source': 'rule-based-v1',
                 'reply': 'Please sign in so I can fetch your issue status safely.',
-                'suggestions': ['Sign in and ask: What is my latest issue status?'],
+                'suggestions': _role_based_suggestions(current_user, intent='status'),
             }), 200
 
         if current_user.role == UserRole.STUDENT:
@@ -175,7 +234,7 @@ def ask_chatbot():
                     'data': {
                         'issues': [_to_status_summary(issue)],
                     },
-                    'suggestions': ['Show my last 3 issues', 'How do I close a resolved issue?'],
+                    'suggestions': _role_based_suggestions(current_user, intent='status'),
                 }), 200
 
             recent_issues = query.limit(3).all()
@@ -185,7 +244,7 @@ def ask_chatbot():
                     'source': 'rule-based-v1',
                     'reply': 'I could not find any issues reported by your account yet.',
                     'data': {'issues': []},
-                    'suggestions': ['How do I report a new issue?'],
+                    'suggestions': _role_based_suggestions(current_user, intent='fallback'),
                 }), 200
 
             latest = recent_issues[0]
@@ -211,7 +270,7 @@ def ask_chatbot():
                 'data': {
                     'issues': [_to_status_summary(issue) for issue in recent_issues],
                 },
-                'suggestions': ['Check issue by ID', 'How do I report another issue?'],
+                'suggestions': _role_based_suggestions(current_user, intent='status'),
             }), 200
 
         # Admin status intent response
@@ -244,7 +303,7 @@ def ask_chatbot():
                     'resolved_by_admin': resolved_waiting_confirmation,
                 }
             },
-            'suggestions': ['Show issue lifecycle', 'How can students close issues?'],
+            'suggestions': _role_based_suggestions(current_user, intent='status'),
         }), 200
 
     faq_match = _match_faq(message)
@@ -264,7 +323,7 @@ def ask_chatbot():
             'source': 'hybrid-v2' if llm_reply else 'rule-based-v1',
             'reply': llm_reply or faq_match['answer'],
             'data': {'faq_id': faq_match['id']},
-            'suggestions': ['What is my latest issue status?', 'How do events registration rules work?'],
+            'suggestions': _role_based_suggestions(current_user, intent='faq'),
         }), 200
 
     verification_hint = ''
@@ -290,9 +349,5 @@ def ask_chatbot():
             'I can help with issue status, issue lifecycle, account verification, '
             f'and event registration FAQs.{verification_hint}'
         ),
-        'suggestions': [
-            'What is my latest issue status?',
-            'How do I report a new issue?',
-            'How does verification work?'
-        ],
+        'suggestions': _role_based_suggestions(current_user, intent='fallback'),
     }), 200

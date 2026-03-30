@@ -69,12 +69,25 @@ export const Navigation: React.FC = () => {
 
                 <Link
                   to="/assistant"
-                  className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-2.5 min-h-11 rounded-lg font-medium transition-all duration-200 whitespace-nowrap ${
-                    isActive('/assistant') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'
+                  className={`relative overflow-hidden flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3.5 py-2 min-h-10 rounded-xl font-semibold transition-all duration-300 whitespace-nowrap border ${
+                    isActive('/assistant')
+                      ? 'text-white border-transparent bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-500 shadow-lg shadow-violet-300/40 scale-[1.02]'
+                      : 'text-violet-700 border-violet-200 bg-gradient-to-r from-violet-50 to-fuchsia-50 hover:from-violet-100 hover:to-fuchsia-100 hover:border-violet-300 hover:shadow-md hover:shadow-violet-200/50 hover:-translate-y-0.5'
                   }`}
+                  title="Open AI Assistant"
                 >
-                  <MessageSquare size={18} />
-                  <span className="hidden sm:inline">Assistant</span>
+                  <span className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.35),transparent_45%)]" />
+                  <MessageSquare size={16} className="relative" />
+                  <span className="hidden sm:inline text-sm">Assistant</span>
+                  <span
+                    className={`relative hidden md:inline-flex items-center rounded-full px-1.5 py-0.5 text-[9px] font-bold tracking-wide ${
+                      isActive('/assistant')
+                        ? 'bg-white/20 text-white'
+                        : 'bg-violet-100 text-violet-700'
+                    }`}
+                  >
+                    AI
+                  </span>
                 </Link>
 
                 {isAdmin && (
