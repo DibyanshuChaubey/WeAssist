@@ -100,21 +100,21 @@ export const EventsDashboard: React.FC = () => {
           <p className="text-purple-100 mb-6 text-lg">Discover cultural and sports events</p>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
             <div className="bg-white bg-opacity-20 rounded-lg p-4 backdrop-blur">
-              <div className="text-purple-100 text-xs sm:text-sm font-medium mb-1">Total Events</div>
+              <div className="text-purple-100 text-sm sm:text-base font-medium mb-1">Total Events</div>
               <div className="text-2xl sm:text-3xl font-bold">{stats.total}</div>
             </div>
             <div className="bg-white bg-opacity-20 rounded-lg p-4 backdrop-blur">
-              <div className="text-purple-100 text-xs sm:text-sm font-medium mb-1">Cultural</div>
+              <div className="text-purple-100 text-sm sm:text-base font-medium mb-1">Cultural</div>
               <div className="text-2xl sm:text-3xl font-bold">{stats.cultural}</div>
             </div>
             <div className="bg-white bg-opacity-20 rounded-lg p-4 backdrop-blur">
-              <div className="text-purple-100 text-xs sm:text-sm font-medium mb-1">Sports</div>
+              <div className="text-purple-100 text-sm sm:text-base font-medium mb-1">Sports</div>
               <div className="text-2xl sm:text-3xl font-bold">{stats.sports}</div>
             </div>
             <div className="bg-white bg-opacity-20 rounded-lg p-4 backdrop-blur">
-              <div className="text-purple-100 text-xs sm:text-sm font-medium mb-1">Open</div>
+              <div className="text-purple-100 text-sm sm:text-base font-medium mb-1">Open</div>
               <div className="text-2xl sm:text-3xl font-bold">{stats.openRegistration}</div>
             </div>
           </div>
@@ -148,7 +148,7 @@ export const EventsDashboard: React.FC = () => {
           </div>
 
           {/* Filters */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {/* Event Type Filter */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Event Type</label>
@@ -254,27 +254,31 @@ export const EventsDashboard: React.FC = () => {
             {/* Pagination */}
             {totalPages > 1 && (
               <div className="border-t border-gray-200 pt-6">
-                <div className="flex items-center justify-between py-6">
-                  <div className="text-sm text-gray-600">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between py-6">
+                  <div className="text-sm text-gray-600 text-center sm:text-left">
                     Page <span className="font-semibold text-gray-900">{currentPage}</span> of{' '}
                     <span className="font-semibold text-gray-900">{totalPages}</span>
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-center gap-2">
                     <button
                       onClick={() => handlePageChange(currentPage - 1)}
                       disabled={currentPage === 1}
-                      className="inline-flex items-center justify-center w-10 h-10 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      className="inline-flex items-center justify-center w-11 h-11 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     >
                       ←
                     </button>
 
-                    <div className="flex items-center gap-1">
+                    <div className="inline-flex md:hidden items-center justify-center min-w-11 h-11 px-3 rounded-lg border border-gray-300 text-sm font-semibold text-gray-700">
+                      {currentPage}
+                    </div>
+
+                    <div className="hidden md:flex items-center gap-1">
                       {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                         <button
                           key={page}
                           onClick={() => handlePageChange(page)}
-                          className={`w-10 h-10 rounded-lg font-medium transition-colors ${
+                          className={`w-11 h-11 rounded-lg font-medium transition-colors ${
                             page === currentPage
                               ? 'bg-purple-600 text-white'
                               : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
@@ -288,7 +292,7 @@ export const EventsDashboard: React.FC = () => {
                     <button
                       onClick={() => handlePageChange(currentPage + 1)}
                       disabled={currentPage === totalPages}
-                      className="inline-flex items-center justify-center w-10 h-10 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      className="inline-flex items-center justify-center w-11 h-11 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     >
                       →
                     </button>

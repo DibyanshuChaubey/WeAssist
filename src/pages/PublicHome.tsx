@@ -76,14 +76,14 @@ export const PublicHome: React.FC = () => {
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => navigate('/login')}
-                  className="flex items-center gap-2 px-4 py-2.5 text-blue-600 hover:bg-blue-50 rounded-lg font-semibold transition-all duration-200"
+                  className="flex items-center gap-2 px-3 sm:px-4 py-2.5 min-h-11 text-blue-600 hover:bg-blue-50 rounded-lg font-semibold transition-all duration-200"
                 >
                   <LogIn size={18} />
                   <span className="hidden sm:inline">Sign In</span>
                 </button>
                 <button
                   onClick={() => navigate('/register')}
-                  className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white hover:shadow-lg rounded-lg font-semibold transition-all duration-200 shadow-md transform hover:translate-y-[-2px]"
+                  className="flex items-center gap-2 px-3 sm:px-4 py-2.5 min-h-11 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white hover:shadow-lg rounded-lg font-semibold transition-all duration-200 shadow-md transform hover:translate-y-[-2px]"
                 >
                   <UserPlus size={18} />
                   <span className="hidden sm:inline">Register</span>
@@ -97,11 +97,11 @@ export const PublicHome: React.FC = () => {
       {/* Hero Section */}
       <div className="relative bg-gradient-to-r from-blue-600 via-blue-500 to-purple-600 text-white py-16 sm:py-20 lg:py-28 overflow-hidden">
         {/* Background decorative elements */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 -z-10"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 -z-10"></div>
+        <div className="absolute top-0 right-0 w-64 h-64 sm:w-96 sm:h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 -z-10"></div>
+        <div className="absolute bottom-0 left-0 w-64 h-64 sm:w-96 sm:h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 -z-10"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight">Welcome to WeAssist</h1>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 leading-tight">Welcome to WeAssist</h1>
           <p className="text-xl sm:text-2xl text-blue-100 mb-8">
             Your hostel management platform for reporting issues and participating in events
           </p>
@@ -117,27 +117,27 @@ export const PublicHome: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-600 text-sm font-semibold uppercase tracking-wide">Total Events</p>
-                <p className="text-4xl font-bold text-gray-900 mt-2">{stats.total}</p>
+                <p className="text-3xl sm:text-4xl font-bold text-gray-900 mt-2">{stats.total}</p>
               </div>
-              <Calendar size={50} className="text-blue-500/20 group-hover:text-blue-600/30 transition-colors" />
+              <Calendar size={40} className="sm:w-[50px] sm:h-[50px] text-blue-500/20 group-hover:text-blue-600/30 transition-colors" />
             </div>
           </div>
           <div className="card-hover group">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-600 text-sm font-semibold uppercase tracking-wide">Cultural Events</p>
-                <p className="text-4xl font-bold text-gray-900 mt-2">{stats.cultural}</p>
+                <p className="text-3xl sm:text-4xl font-bold text-gray-900 mt-2">{stats.cultural}</p>
               </div>
-              <AlertCircle size={50} className="text-purple-500/20 group-hover:text-purple-600/30 transition-colors" />
+              <AlertCircle size={40} className="sm:w-[50px] sm:h-[50px] text-purple-500/20 group-hover:text-purple-600/30 transition-colors" />
             </div>
           </div>
           <div className="card-hover group">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-600 text-sm font-semibold uppercase tracking-wide">Sports Events</p>
-                <p className="text-4xl font-bold text-gray-900 mt-2">{stats.sports}</p>
+                <p className="text-3xl sm:text-4xl font-bold text-gray-900 mt-2">{stats.sports}</p>
               </div>
-              <Calendar size={50} className="text-orange-500/20 group-hover:text-orange-600/30 transition-colors" />
+              <Calendar size={40} className="sm:w-[50px] sm:h-[50px] text-orange-500/20 group-hover:text-orange-600/30 transition-colors" />
             </div>
           </div>
         </div>
@@ -219,27 +219,32 @@ export const PublicHome: React.FC = () => {
                   <button
                     onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                     disabled={currentPage === 1}
-                    className="px-4 py-2 text-gray-700 font-semibold hover:bg-gray-100 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-3 sm:px-4 py-2.5 min-h-11 text-gray-700 font-semibold hover:bg-gray-100 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     ← Previous
                   </button>
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                    <button
-                      key={page}
-                      onClick={() => setCurrentPage(page)}
-                      className={`px-4 py-2 rounded-lg font-semibold transition-all duration-200 ${
-                        currentPage === page
-                          ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md'
-                          : 'text-gray-700 hover:bg-gray-100'
-                      }`}
-                    >
-                      {page}
-                    </button>
-                  ))}
+                  <div className="inline-flex sm:hidden items-center justify-center min-w-11 h-11 px-3 rounded-lg border border-gray-300 text-sm font-semibold text-gray-700">
+                    {currentPage}
+                  </div>
+                  <div className="hidden sm:flex items-center gap-2">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                      <button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={`px-4 py-2.5 min-h-11 rounded-lg font-semibold transition-all duration-200 ${
+                          currentPage === page
+                            ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md'
+                            : 'text-gray-700 hover:bg-gray-100'
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    ))}
+                  </div>
                   <button
                     onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
                     disabled={currentPage === totalPages}
-                    className="px-4 py-2 text-gray-700 font-semibold hover:bg-gray-100 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-3 sm:px-4 py-2.5 min-h-11 text-gray-700 font-semibold hover:bg-gray-100 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Next →
                   </button>
@@ -257,13 +262,13 @@ export const PublicHome: React.FC = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
                 onClick={() => navigate('/register')}
-                className="px-6 py-3 bg-white text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition-all duration-200 transform hover:scale-105 shadow-lg"
+                className="px-4 sm:px-6 py-2.5 sm:py-3 bg-white text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition-all duration-200 transform hover:scale-105 shadow-lg"
               >
                 Register Now
               </button>
               <button
                 onClick={() => navigate('/login')}
-                className="px-6 py-3 border-2 border-white text-white font-semibold rounded-lg hover:bg-blue-700 transition-all duration-200 transform hover:scale-105"
+                className="px-4 sm:px-6 py-2.5 sm:py-3 border-2 border-white text-white font-semibold rounded-lg hover:bg-blue-700 transition-all duration-200 transform hover:scale-105"
               >
                 Sign In
               </button>

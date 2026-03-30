@@ -148,7 +148,7 @@ export const IssueSubmissionForm: React.FC<IssueSubmissionFormProps> = ({
   };
 
   return (
-    <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
+    <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-4 sm:p-6">
       <h2 className="text-2xl font-bold mb-6 text-gray-800">
         Report New Issue
       </h2>
@@ -249,7 +249,7 @@ export const IssueSubmissionForm: React.FC<IssueSubmissionFormProps> = ({
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <div className="mt-2">
-            <label className="inline-flex items-center px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-sm font-medium text-gray-700 cursor-pointer transition-colors">
+            <label className="inline-flex w-full sm:w-auto justify-center items-center px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-sm font-medium text-gray-700 cursor-pointer transition-colors">
               <input
                 type="file"
                 accept="image/png,image/jpeg,image/jpg,image/webp"
@@ -265,7 +265,7 @@ export const IssueSubmissionForm: React.FC<IssueSubmissionFormProps> = ({
               <img
                 src={formData.imageUrl}
                 alt="Issue preview"
-                className="w-full h-48 object-cover"
+                className="w-full h-32 sm:h-48 object-cover"
                 onError={(e) => {
                   e.currentTarget.style.display = 'none';
                 }}
@@ -275,7 +275,7 @@ export const IssueSubmissionForm: React.FC<IssueSubmissionFormProps> = ({
         </div>
 
         {/* Location */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           <div>
             <label
               htmlFor="location.hostel"

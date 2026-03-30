@@ -155,25 +155,26 @@ export const AdminIssuesManagement: React.FC = () => {
 
         {/* Issues Table */}
         <div className="bg-white rounded-lg shadow overflow-hidden">
+          <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
                   Issue
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
                   Category
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
                   AI Priority
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
                   Final Priority
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
                   Status
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
                   Actions
                 </th>
               </tr>
@@ -181,20 +182,20 @@ export const AdminIssuesManagement: React.FC = () => {
             <tbody className="bg-white divide-y divide-gray-200">
               {loading ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-4 text-center">
+                  <td colSpan={6} className="px-3 sm:px-6 py-4 text-center">
                     Loading...
                   </td>
                 </tr>
               ) : issues.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-4 text-center text-gray-500">
+                  <td colSpan={6} className="px-3 sm:px-6 py-4 text-center text-gray-500">
                     No issues found
                   </td>
                 </tr>
               ) : (
                 issues.map((issue) => (
                   <tr key={issue.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4">
+                    <td className="px-3 sm:px-6 py-4">
                       <div className="text-sm font-medium text-gray-900">
                         {issue.title}
                       </div>
@@ -203,10 +204,10 @@ export const AdminIssuesManagement: React.FC = () => {
                         {issue.location.room}
                       </div>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-3 sm:px-6 py-4">
                       <CategoryTag category={issue.category} />
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-3 sm:px-6 py-4">
                       {issue.priorityAiSuggested ? (
                         <div>
                           <PriorityChip priority={issue.priorityAiSuggested} />
@@ -220,7 +221,7 @@ export const AdminIssuesManagement: React.FC = () => {
                         <span className="text-gray-400">N/A</span>
                       )}
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-3 sm:px-6 py-4">
                       {issue.priorityFinal ? (
                         <PriorityChip priority={issue.priorityFinal} />
                       ) : (
@@ -236,10 +237,10 @@ export const AdminIssuesManagement: React.FC = () => {
                         </button>
                       )}
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-3 sm:px-6 py-4">
                       <StatusBadge status={issue.status} />
                     </td>
-                    <td className="px-6 py-4 text-sm">
+                    <td className="px-3 sm:px-6 py-4 text-sm whitespace-nowrap">
                       <button
                         onClick={() => {
                           setSelectedIssue(issue);
@@ -265,6 +266,7 @@ export const AdminIssuesManagement: React.FC = () => {
               )}
             </tbody>
           </table>
+          </div>
         </div>
       </div>
 

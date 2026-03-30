@@ -33,9 +33,9 @@ class IssuePredictorService:
                 self.models_loaded = True
                 logger.info("✓ AI models loaded successfully")
             else:
-                logger.warning("⚠ AI models not found. Run train_model.py first.")
-                logger.warning(f"  Expected: {category_path}")
-                logger.warning(f"  Expected: {priority_path}")
+                logger.info("AI models not found. Using rule-based fallback.")
+                logger.debug(f"Expected: {category_path}")
+                logger.debug(f"Expected: {priority_path}")
         except Exception as e:
             logger.error(f"Error loading models: {e}")
             self.models_loaded = False
@@ -52,7 +52,7 @@ class IssuePredictorService:
             str: Predicted category or None
         """
         if not self.models_loaded:
-            logger.warning("Models not loaded, cannot predict category")
+            logger.debug("Models not loaded, cannot predict category")
             return None
         
         try:
@@ -82,7 +82,7 @@ class IssuePredictorService:
             tuple: (priority, reason) or (None, None)
         """
         if not self.models_loaded:
-            logger.warning("Models not loaded, cannot predict priority")
+            logger.debug("Models not loaded, cannot predict priority")
             return None, None
         
         try:

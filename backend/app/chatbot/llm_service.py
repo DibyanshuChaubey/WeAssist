@@ -94,8 +94,10 @@ def _parse_openrouter_error_message(response: requests.Response) -> str:
 
 
 def _is_openrouter_rate_limited(response: requests.Response, error_message: str) -> bool:
-    if response.status_code != 429:
-        return False
+    # OpenRouter free providers often return generic 429 messages such as
+    # "Provider returned error" without explicit "rate limit" tokens.
+    if response.status_code == 429:
+        return True
 
     lowered = (error_message or '').lower()
     return any(token in lowered for token in ('rate limit', 'free-models-per-day', 'too many requests', 'quota'))

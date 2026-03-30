@@ -160,9 +160,9 @@ export const FloatingChatbot: React.FC = () => {
   }
 
   return (
-    <div className="fixed z-50 bottom-5 right-5 sm:bottom-6 sm:right-6">
+    <div className="fixed z-50 bottom-3 right-2 sm:bottom-6 sm:right-6">
       {isOpen && (
-        <section className="mb-3 w-[calc(100vw-2rem)] sm:w-[24rem] h-[31rem] bg-white rounded-2xl border border-gray-200 shadow-2xl overflow-hidden flex flex-col">
+        <section className="mb-3 w-[calc(100vw-1rem)] max-w-[24rem] sm:w-[24rem] h-[calc(100vh-8.5rem)] sm:h-[31rem] bg-white rounded-2xl border border-gray-200 shadow-2xl overflow-hidden flex flex-col">
           <header className="px-4 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Sparkles size={16} />
@@ -201,7 +201,7 @@ export const FloatingChatbot: React.FC = () => {
                   key={prompt}
                   type="button"
                   onClick={() => sendMessage(prompt)}
-                  className="text-[11px] px-2.5 py-1 rounded-full border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors"
+                  className="w-full sm:w-auto text-left text-[11px] px-2.5 py-1.5 rounded-full border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors"
                 >
                   {prompt}
                 </button>
@@ -297,7 +297,7 @@ export const FloatingChatbot: React.FC = () => {
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
-        className="ml-auto group relative inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-4 py-3 shadow-xl hover:shadow-2xl transition-all"
+        className="ml-auto group relative inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-4 py-3 min-h-11 shadow-xl hover:shadow-2xl transition-all"
         aria-label="Toggle AI assistant"
       >
         <Bot size={18} className="group-hover:scale-110 transition-transform" />

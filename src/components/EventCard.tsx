@@ -35,7 +35,7 @@ export const EventCard: React.FC<EventCardProps> = ({ event, onClick }) => {
       className="bg-white rounded-xl border border-gray-200/50 overflow-hidden hover:shadow-xl hover:border-blue-300/50 hover:translate-y-[-8px] transition-all duration-300 cursor-pointer h-full flex flex-col group shadow-md"
       onClick={() => onClick?.(event)}
     >
-      <div className="relative h-48 overflow-hidden bg-gray-200">
+      <div className="relative aspect-video overflow-hidden bg-gray-200">
         <img
           src={event.imageUrl || fallbackImageUrl}
           alt={event.title}
@@ -49,7 +49,7 @@ export const EventCard: React.FC<EventCardProps> = ({ event, onClick }) => {
       </div>
 
       {/* Header */}
-      <div className="flex-1 p-5 flex flex-col">
+      <div className="flex-1 p-4 sm:p-5 flex flex-col">
         <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">{event.title}</h3>
         <p className="text-sm text-gray-600 line-clamp-2 mb-4">{event.description}</p>
 
@@ -77,7 +77,7 @@ export const EventCard: React.FC<EventCardProps> = ({ event, onClick }) => {
       </div>
 
       {/* Footer */}
-      <div className="pt-4 px-5 pb-5 border-t border-gray-100 space-y-2.5">
+      <div className="pt-4 px-4 sm:px-5 pb-4 sm:pb-5 border-t border-gray-100 space-y-2.5">
         <div className="flex items-center gap-3 text-sm text-gray-700 font-medium">
           <Calendar size={16} className="flex-shrink-0 text-blue-600" />
           <span>{new Date(event.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
@@ -85,7 +85,7 @@ export const EventCard: React.FC<EventCardProps> = ({ event, onClick }) => {
         </div>
         <div className="flex items-center gap-3 text-sm text-gray-700 font-medium">
           <MapPin size={16} className="flex-shrink-0 text-purple-600" />
-          <span className="line-clamp-1">{event.venue}</span>
+          <span className="line-clamp-2 sm:line-clamp-1">{event.venue}</span>
         </div>
 
         {/* Registration Info */}

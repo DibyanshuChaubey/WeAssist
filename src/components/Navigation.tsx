@@ -27,13 +27,13 @@ export const Navigation: React.FC = () => {
           </Link>
 
           {/* Navigation Links */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 max-w-[52vw] sm:max-w-none overflow-x-auto">
             {isAuthenticated && (
               <>
                 {!isAdmin && (
                   <Link
                     to="/"
-                    className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                    className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-2.5 min-h-11 rounded-lg font-medium transition-all duration-200 whitespace-nowrap ${
                       isActive('/') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'
                     }`}
                     title="Home"
@@ -46,7 +46,7 @@ export const Navigation: React.FC = () => {
                 {!isAdmin && (
                   <Link
                     to="/dashboard"
-                    className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                    className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-2.5 min-h-11 rounded-lg font-medium transition-all duration-200 whitespace-nowrap ${
                       isActive('/dashboard') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'
                     }`}
                   >
@@ -58,7 +58,7 @@ export const Navigation: React.FC = () => {
                 {!isAdmin && (
                   <Link
                     to="/events"
-                    className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                    className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-2.5 min-h-11 rounded-lg font-medium transition-all duration-200 whitespace-nowrap ${
                       isActive('/events') ? 'bg-purple-50 text-purple-700' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'
                     }`}
                   >
@@ -69,7 +69,7 @@ export const Navigation: React.FC = () => {
 
                 <Link
                   to="/assistant"
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                  className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-2.5 min-h-11 rounded-lg font-medium transition-all duration-200 whitespace-nowrap ${
                     isActive('/assistant') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'
                   }`}
                 >
@@ -81,7 +81,7 @@ export const Navigation: React.FC = () => {
                   <>
                     <Link
                       to="/"
-                      className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                      className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-2.5 min-h-11 rounded-lg font-medium transition-all duration-200 whitespace-nowrap ${
                         isActive('/') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'
                       }`}
                       title="Home"
@@ -92,7 +92,7 @@ export const Navigation: React.FC = () => {
 
                     <Link
                       to="/admin/issues"
-                      className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                      className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-2.5 min-h-11 rounded-lg font-medium transition-all duration-200 whitespace-nowrap ${
                         isActive('/admin/issues') ? 'bg-red-50 text-red-700' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'
                       }`}
                     >
@@ -102,7 +102,7 @@ export const Navigation: React.FC = () => {
 
                     <Link
                       to="/admin/events"
-                      className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                      className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-2.5 min-h-11 rounded-lg font-medium transition-all duration-200 whitespace-nowrap ${
                         isActive('/admin/events') ? 'bg-purple-50 text-purple-700' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'
                       }`}
                     >
@@ -112,7 +112,7 @@ export const Navigation: React.FC = () => {
 
                     <Link
                       to="/admin/students"
-                      className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                      className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-2.5 min-h-11 rounded-lg font-medium transition-all duration-200 whitespace-nowrap ${
                         isActive('/admin/students') ? 'bg-green-50 text-green-700' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'
                       }`}
                     >
@@ -147,7 +147,7 @@ export const Navigation: React.FC = () => {
 
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-red-50 hover:text-red-700 rounded-lg transition-all duration-200 font-medium text-sm"
+                className="flex items-center gap-2 px-3 sm:px-4 py-2.5 min-h-11 text-gray-700 hover:bg-red-50 hover:text-red-700 rounded-lg transition-all duration-200 font-medium text-sm"
                 title="Sign out"
               >
                 <LogOut size={18} />
@@ -157,7 +157,7 @@ export const Navigation: React.FC = () => {
           ) : (
             <Link
               to="/login"
-              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg font-semibold transition-all duration-200 text-sm shadow-md hover:shadow-lg transform hover:translate-y-[-2px]"
+              className="flex items-center gap-2 px-3 sm:px-4 py-2.5 min-h-11 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg font-semibold transition-all duration-200 text-sm shadow-md hover:shadow-lg transform hover:translate-y-[-2px]"
             >
               <LogIn size={18} />
               <span className="hidden sm:inline">Sign In</span>

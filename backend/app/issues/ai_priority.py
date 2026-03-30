@@ -2,6 +2,9 @@ from app.models import IssuePriority
 import re
 import sys
 import os
+import logging
+
+logger = logging.getLogger(__name__)
 
 # Add ai module to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
@@ -11,7 +14,7 @@ try:
     AI_AVAILABLE = True
 except ImportError:
     AI_AVAILABLE = False
-    print("Warning: AI prediction module not available")
+    logger.warning("AI prediction module not available; using rule-based priority fallback")
 
 class PriorityAI:
     """ML-based AI for issue priority suggestion with rule-based fallback"""
@@ -62,7 +65,7 @@ class PriorityAI:
                     
                     return priority, reason
             except Exception as e:
-                print(f"ML prediction failed: {e}, falling back to rule-based")
+                logger.warning(f"ML prediction failed: {e}. Falling back to rule-based priority")
         
         # Fallback to rule-based priority
         return PriorityAI._rule_based_priority(title, description, category, hostel, floor)

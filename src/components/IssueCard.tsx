@@ -40,7 +40,7 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, onClick, onConfirmR
         </div>
       )}
 
-      <div className="p-5 flex-1 flex flex-col">
+      <div className="p-4 sm:p-5 flex-1 flex flex-col">
         {/* Header */}
         <div className="flex-1">
           <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">{issue.title}</h3>
@@ -48,7 +48,7 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, onClick, onConfirmR
         </div>
 
         {issue.imageUrl && (
-          <div className="mb-4 rounded-lg overflow-hidden border border-gray-200/50 h-40 bg-gray-200">
+          <div className="mb-4 rounded-lg overflow-hidden border border-gray-200/50 aspect-video bg-gray-200">
             <img
               src={issue.imageUrl}
               alt={issue.title}
@@ -62,7 +62,7 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, onClick, onConfirmR
           <CategoryTag category={issue.category} variant="filled" />
           <div className="inline-flex items-center gap-1.5 text-xs text-gray-700 bg-gray-100/80 px-3 py-1.5 rounded-lg font-semibold">
             <MapPin size={14} />
-            <span className="line-clamp-1">
+            <span className="line-clamp-2 sm:line-clamp-1">
               {issue.location.hostel} • Fl{issue.location.floor} Rm{issue.location.room}
             </span>
           </div>
