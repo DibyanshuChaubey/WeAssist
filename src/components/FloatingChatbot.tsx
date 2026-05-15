@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Bot, SendHorizonal, Sparkles, X, Trash2, User } from 'lucide-react';
+import { MessageCircle, MessageSquare, SendHorizonal, X, Trash2, User } from 'lucide-react';
 import { chatbotService, ChatbotIssueSummary } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
@@ -129,7 +129,7 @@ export const FloatingChatbot: React.FC = () => {
   useEffect(() => {
     const newStorageKey = getStorageKey(isAuthenticated, currentUser?.id);
     storageKeyRef.current = newStorageKey;
-    
+
     // Only load from storage if we have some saved messages
     // Add initial message back if loading persisted messages
     const loadedMessages = loadMessagesFromStorage(newStorageKey, initialMessage);
@@ -200,16 +200,20 @@ export const FloatingChatbot: React.FC = () => {
     return null;
   }
 
+  const lastMessage = messages[messages.length - 1];
+
   return (
     <div className="fixed z-50 bottom-3 right-2 sm:bottom-6 sm:right-6">
       {isOpen && (
-        <section className="mb-3 w-[calc(100vw-1rem)] max-w-[24rem] sm:w-[24rem] h-[calc(100vh-8.5rem)] sm:h-[31rem] bg-white rounded-2xl border border-transparent shadow-2xl overflow-hidden flex flex-col animate-in fade-in duration-300">
-          <header className="px-4 py-3 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 text-white flex items-center justify-between">
+        <section className="mb-3 w-[calc(100vw-1rem)] max-w-[22rem] sm:w-[22rem] h-[calc(100vh-10rem)] sm:h-[28rem] bg-slate-950/95 border border-slate-700/70 rounded-[2rem] shadow-[0_28px_70px_-30px_rgba(15,23,42,0.85)] backdrop-blur-3xl overflow-hidden flex flex-col animate-in fade-in duration-300">
+          <header className="px-4 py-3 bg-slate-900/95 text-white flex items-center justify-between border-b border-slate-700/80">
             <div className="flex items-center gap-2">
-              <Sparkles size={18} className="animate-pulse" />
+              <div className="grid place-items-center w-10 h-10 rounded-[1.5rem] bg-gradient-to-br from-fuchsia-500 to-cyan-500 text-white shadow-lg">
+                <MessageSquare size={18} />
+              </div>
               <div>
-                <p className="font-bold text-sm">✨ AI Assistant</p>
-                <p className="text-[11px] text-purple-100">
+                <p className="font-semibold text-sm tracking-wide uppercase">AI Assistant</p>
+                <p className="text-[11px] text-slate-400">
                   {isAuthenticated ? 'Personalized support enabled' : 'Sign in for personal issue status'}
                 </p>
               </div>
@@ -235,14 +239,14 @@ export const FloatingChatbot: React.FC = () => {
             </div>
           </header>
 
-          <div className="px-3 py-3 border-b border-purple-100 bg-gradient-to-r from-purple-50 to-pink-50">
-            <div className="flex flex-wrap gap-1.5">
+          <div className="px-3 py-2 border-b border-slate-700/80 bg-slate-900/90">
+            <div className="flex flex-wrap gap-2">
               {quickPrompts.map((prompt) => (
                 <button
                   key={prompt}
                   type="button"
                   onClick={() => sendMessage(prompt)}
-                  className="w-full sm:w-auto text-left text-[11px] px-2.5 py-1.5 rounded-full border border-purple-200 bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 hover:from-purple-200 hover:to-pink-200 transition-all duration-200 font-medium"
+                  className="w-full sm:w-auto text-left text-[11px] px-3 py-2 rounded-full border border-slate-700/70 bg-slate-900 text-white hover:bg-slate-800 transition-all duration-200 font-medium"
                 >
                   {prompt}
                 </button>
@@ -250,85 +254,89 @@ export const FloatingChatbot: React.FC = () => {
             </div>
           </div>
 
-          <div ref={listRef} className="flex-1 overflow-y-auto px-3 py-3 space-y-3 bg-gradient-to-b from-slate-50 to-purple-50/30">
-            {messages.map((msg, index) => (
+          <div ref={listRef} className="flex-1 overflow-y-auto px-3 py-2 space-y-2 bg-slate-950">
+            {messages.map((msg) => (
               <div
                 key={msg.id}
                 className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-[88%] rounded-2xl px-3 py-2.5 border text-sm ${
-                    msg.role === 'user'
-                      ? 'bg-gradient-to-br from-indigo-600 to-purple-600 text-white border-transparent shadow-md'
-                      : 'bg-white text-gray-800 border-purple-100 shadow-sm'
-                  }`}
+                  className={`max-w-[88%] rounded-xl px-3 py-2 border text-sm ${msg.role === 'user'
+                    ? 'bg-emerald-950 text-emerald-100 border border-emerald-500/20 shadow-[0_12px_30px_-20px_rgba(16,185,129,0.45)]'
+                    : 'bg-slate-900 text-slate-100 border border-slate-800 shadow-[0_12px_30px_-20px_rgba(15,23,42,0.45)]'
+                    }`}
                 >
-                  <div className="flex items-center gap-1.5 mb-1 text-[11px] font-semibold uppercase tracking-wide opacity-80">
-                    {msg.role === 'user' ? <User size={12} /> : <Bot size={12} />}
+                  <div className="flex items-center gap-1 mb-1 text-[10px] font-semibold uppercase tracking-wide text-white/70">
+                    {msg.role === 'user' ? <User size={12} /> : <MessageSquare size={12} />}
                     {msg.role === 'user' ? 'You' : 'Assistant'}
                   </div>
-                  <p className="whitespace-pre-wrap leading-relaxed">{msg.text}</p>
+                  <p className="whitespace-pre-wrap leading-snug text-sm">{msg.text}</p>
 
                   {msg.issues && msg.issues.length > 0 && (
-                    <div className="mt-2.5 space-y-2">
+                    <div className="mt-2 space-y-1">
                       {msg.issues.map((issue) => (
-                        <div key={issue.id} className="rounded-lg border border-purple-200 px-2.5 py-2 bg-gradient-to-r from-purple-50 to-pink-50 text-xs">
-                          <p className="font-semibold text-gray-900">{issue.title}</p>
-                          <p className="text-purple-700 font-medium">Status: {issue.status}</p>
-                          <p className="text-gray-500">ID: {issue.id.slice(0, 8)}</p>
+                        <div key={issue.id} className="rounded-xl border border-slate-700 px-2 py-1 bg-slate-900 text-xs text-white/90">
+                          <p className="font-semibold text-white">{issue.title}</p>
+                          <p className="text-purple-300 font-medium">Status: {issue.status}</p>
+                          <p className="text-slate-400">ID: {issue.id.slice(0, 8)}</p>
                         </div>
                       ))}
                     </div>
                   )}
 
-                  {msg.suggestions && msg.suggestions.length > 0 && index === messages.length - 1 && (
-                    <div className="mt-2.5 flex flex-wrap gap-1.5">
-                      {msg.suggestions.map((suggestion) => (
-                        <button
-                          key={`${msg.id}-${suggestion}`}
-                          type="button"
-                          onClick={() => sendMessage(suggestion)}
-                          className="text-[11px] px-2 py-1 rounded-full border border-purple-200 bg-purple-50 text-purple-700 hover:bg-purple-100 transition-all duration-200 font-medium"
-                        >
-                          {suggestion}
-                        </button>
-                      ))}
-                    </div>
-                  )}
+                  {/* suggestions moved to sticky area below messages for minimal UI */}
                 </div>
               </div>
             ))}
 
             {isLoading && (
               <div className="flex justify-start">
-                <div className="max-w-[88%] rounded-2xl px-3 py-2.5 border text-sm bg-white text-gray-700 border-purple-100 shadow-sm animate-pulse">
+                <div className="max-w-[88%] rounded-2xl px-3 py-2.5 border text-sm bg-slate-800 text-white/90 border-slate-700 shadow-sm animate-pulse">
                   Thinking...
                 </div>
               </div>
             )}
           </div>
 
+          {/* Sticky minimal suggestions (stays above input) */}
+          {(lastMessage?.suggestions?.length ?? 0) > 0 && (
+            <div className="sticky bottom-0 z-10 px-3 pb-2 bg-transparent">
+              <div className="flex flex-wrap gap-2 text-sm">
+                {lastMessage!.suggestions!.map((sug) => (
+                  <button
+                    key={sug}
+                    type="button"
+                    onClick={() => sendMessage(sug)}
+                    className="text-slate-300 hover:text-white transition-colors text-[13px] cursor-pointer focus:outline-none bg-transparent leading-tight"
+                  >
+                    {sug}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           <form
             onSubmit={(e) => {
               e.preventDefault();
               sendMessage();
             }}
-            className="border-t border-purple-100 bg-gradient-to-r from-purple-50 to-pink-50 px-3 py-2"
+            className="border-t border-slate-700/80 bg-slate-950/95 px-3 py-3"
           >
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask a question..."
-                className="flex-1 px-3 py-2.5 text-sm rounded-xl border border-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-1 bg-white"
+                className="flex-1 min-h-[3rem] rounded-full border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-white placeholder-slate-500 shadow-[0_0_0_1px_rgba(148,163,184,0.12)] transition-all duration-200 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/30 focus:ring-offset-1 focus:ring-offset-slate-950"
               />
               <button
                 type="submit"
                 disabled={!input.trim() || isLoading}
-                className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-400 text-white transition-all duration-200"
+                className="inline-flex h-12 min-w-[3rem] items-center justify-center rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 px-4 text-white shadow-lg transition-all duration-200 hover:from-fuchsia-400 hover:to-cyan-400 disabled:cursor-not-allowed disabled:bg-slate-700"
                 aria-label="Send message"
               >
-                <SendHorizonal size={16} />
+                <SendHorizonal size={18} />
               </button>
             </div>
           </form>
@@ -339,11 +347,13 @@ export const FloatingChatbot: React.FC = () => {
         <button
           type="button"
           onClick={() => setIsOpen(true)}
-          className="group relative inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 text-white px-4 py-3 min-h-11 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-110 hover:-translate-y-1"
+          className="group relative inline-flex items-center gap-2 rounded-full bg-slate-950/95 border border-white/10 text-white px-3 py-2 min-h-[3rem] shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.03]"
           aria-label="Toggle AI assistant"
         >
-          <Bot size={18} className="group-hover:scale-110 transition-transform" />
-          <span className="text-sm font-bold hidden sm:inline">Ask AI</span>
+          <span className="grid place-items-center w-9 h-9 rounded-2xl bg-gradient-to-br from-fuchsia-500 to-cyan-500 text-white shadow-lg">
+            <MessageCircle size={18} className="group-hover:scale-110 transition-transform" />
+          </span>
+          <span className="text-sm font-semibold hidden sm:inline">Ask Support</span>
         </button>
       )}
     </div>

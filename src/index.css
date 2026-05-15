@@ -30,6 +30,7 @@
 }
 
 @layer components {
+
   /* Button Utilities - Modern Design */
   .btn-primary {
     @apply px-4 py-2.5 rounded-lg bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-200 transform hover:translate-y-[-2px] hover:shadow-lg active:translate-y-[0px] shadow-md;
@@ -139,18 +140,33 @@
 
   /* Animation Utilities */
   @keyframes fadeIn {
-    from { @apply opacity-0; }
-    to { @apply opacity-100; }
+    from {
+      @apply opacity-0;
+    }
+
+    to {
+      @apply opacity-100;
+    }
   }
 
   @keyframes slideUpFromBottom {
-    from { @apply opacity-0 translate-y-4; }
-    to { @apply opacity-100 translate-y-0; }
+    from {
+      @apply opacity-0 translate-y-4;
+    }
+
+    to {
+      @apply opacity-100 translate-y-0;
+    }
   }
 
   @keyframes slideInFromLeft {
-    from { @apply opacity-0 -translate-x-4; }
-    to { @apply opacity-100 translate-x-0; }
+    from {
+      @apply opacity-0 -translate-x-4;
+    }
+
+    to {
+      @apply opacity-100 translate-x-0;
+    }
   }
 
   .animate-fade-in {
@@ -164,6 +180,7 @@
   .animate-slide-in {
     animation: slideInFromLeft 0.4s ease-out;
   }
+
 }
 
 /* Smooth scrolling behavior */
