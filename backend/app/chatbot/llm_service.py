@@ -6,8 +6,8 @@ from typing import Optional
 import requests
 
 
-DEFAULT_OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions'
-DEFAULT_FREE_MODEL = 'google/gemma-3-4b-it:free'
+DEFAULT_OPENROUTER_URL = 'https://openrouter.ai/'
+DEFAULT_FREE_MODEL = 'openai/gpt-oss-20b:free'
 DEFAULT_FALLBACK_MODELS = [
     'google/gemma-3-4b-it:free',
     'meta-llama/llama-3.2-3b-instruct:free',
