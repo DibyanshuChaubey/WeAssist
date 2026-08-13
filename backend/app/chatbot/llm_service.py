@@ -6,7 +6,7 @@ from typing import Optional
 import requests
 
 
-DEFAULT_OPENROUTER_URL = 'https://openrouter.ai/'
+DEFAULT_OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions'
 DEFAULT_FREE_MODEL = 'openai/gpt-oss-20b:free'
 DEFAULT_FALLBACK_MODELS = [
     'google/gemma-3-4b-it:free',
@@ -93,6 +93,34 @@ def _parse_openrouter_error_message(response: requests.Response) -> str:
     return response.text[:220] if response.text else 'unknown OpenRouter error'
 
 
+def _response_content_type(response: requests.Response) -> str:
+    return (response.headers.get('Content-Type') or '').lower().strip()
+
+
+def _safe_parse_openrouter_json(response: requests.Response) -> Optional[dict]:
+    """Parse OpenRouter JSON responses safely and log actionable context on failure."""
+    content_type = _response_content_type(response)
+
+    # If endpoint/proxy returns HTML/text instead of JSON, avoid noisy JSONDecode errors.
+    if 'application/json' not in content_type:
+        body_preview = (response.text or '').strip().replace('\n', ' ')[:220]
+        logging.warning(
+            f'OpenRouter returned unexpected content type: {content_type or "<missing>"} '
+            f'status={response.status_code} body_preview={body_preview!r}'
+        )
+        return None
+
+    try:
+        return response.json()
+    except ValueError as exc:
+        body_preview = (response.text or '').strip().replace('\n', ' ')[:220]
+        logging.warning(
+            f'OpenRouter returned invalid JSON status={response.status_code}: {exc}; '
+            f'body_preview={body_preview!r}'
+        )
+        return None
+
+
 def _is_openrouter_rate_limited(response: requests.Response, error_message: str) -> bool:
     # OpenRouter free providers often return generic 429 messages such as
     # "Provider returned error" without explicit "rate limit" tokens.
@@ -170,7 +198,10 @@ def generate_assistant_reply(
                 logging.warning(f'OpenRouter call failed for model={model} status={response.status_code}: {error_message}')
                 continue
 
-            data = response.json()
+            data = _safe_parse_openrouter_json(response)
+            if not data:
+                continue
+
             choices = data.get('choices') or []
             if not choices:
                 continue
