@@ -99,7 +99,7 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="app-shell flex items-center justify-center p-4 relative overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute top-0 left-0 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 -z-10"></div>
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 -z-10"></div>
@@ -114,16 +114,16 @@ export const LoginPage: React.FC = () => {
               <LogIn className="text-blue-600" size={32} />
             )}
           </div>
-          <h1 className="text-4xl font-bold text-white mb-2">WeAssist</h1>
-          <p className="text-blue-100 text-lg">Hostel Management Platform</p>
+          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 mb-2">WeAssist</h1>
+          <p className="text-slate-600 text-lg">Hostel Management Platform</p>
         </div>
 
         {/* Main Card */}
-        <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 mb-6">
+        <div className="ios-surface-strong rounded-[28px] p-8 mb-6">
           {/* Tabs */}
           <div className="flex gap-2 mb-8 bg-gray-100 p-1 rounded-lg">
             <button
-              className={`flex-1 font-semibold text-sm px-4 py-2.5 rounded-md transition-all duration-200 ${
+                className={`flex-1 font-semibold text-sm px-4 py-2.5 rounded-xl transition-all duration-200 ${
                 !isRegister
                   ? 'bg-blue-600 text-white shadow-md'
                   : 'text-gray-700 hover:text-gray-900'
@@ -137,7 +137,7 @@ export const LoginPage: React.FC = () => {
               Sign In
             </button>
             <button
-              className={`flex-1 font-semibold text-sm px-4 py-2.5 rounded-md transition-all duration-200 ${
+                className={`flex-1 font-semibold text-sm px-4 py-2.5 rounded-xl transition-all duration-200 ${
                 isRegister
                   ? 'bg-blue-600 text-white shadow-md'
                   : 'text-gray-700 hover:text-gray-900'
@@ -209,10 +209,10 @@ export const LoginPage: React.FC = () => {
               {/* Demo Login Section */}
               <div className="relative my-8">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-300"></div>
+                  <div className="w-full border-t border-slate-300/70"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-3 bg-white text-gray-600 font-medium">Quick Demo Access</span>
+                  <span className="px-3 bg-white/95 text-slate-600 font-medium rounded-full">Quick Demo Access</span>
                 </div>
               </div>
 
@@ -304,7 +304,7 @@ export const LoginPage: React.FC = () => {
         </div>
 
         {/* Sign In / Register Link */}
-        <p className="text-center text-sm text-white/90">
+        <p className="text-center text-sm text-slate-700">
           {isRegister ? 'Already have an account?' : "Don't have an account?"}
           <button
             onClick={() => {
@@ -312,7 +312,7 @@ export const LoginPage: React.FC = () => {
               setError('');
               setPending(false);
             }}
-            className="ml-2 font-bold text-white hover:text-blue-100 transition-colors underline"
+            className="ml-2 font-bold text-blue-700 hover:text-blue-800 transition-colors underline"
           >
             {isRegister ? 'Sign In' : 'Register'}
           </button>

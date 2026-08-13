@@ -89,33 +89,34 @@ export const EventsDashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="app-shell">
       {/* Header */}
-      <div className="bg-gradient-to-r from-purple-600 to-purple-800 text-white py-8 md:py-12">
+      <div className="py-7 md:py-9">
         <div className="container-padded max-w-7xl mx-auto">
-          <div className="flex items-center gap-3 mb-4">
-            <Calendar size={32} />
-            <h1 className="text-3xl md:text-4xl font-bold">Hostel Events</h1>
-          </div>
-          <p className="text-purple-100 mb-6 text-lg">Discover cultural and sports events</p>
+          <div className="ios-surface-strong rounded-[30px] px-6 py-7 text-slate-900">
+            <div className="flex items-center gap-3 mb-4">
+              <Calendar size={32} className="text-indigo-600" />
+              <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">Hostel Events</h1>
+            </div>
+            <p className="text-slate-600 mb-6 text-lg">Discover cultural and sports events</p>
 
-          {/* Stats */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-            <div className="bg-white bg-opacity-20 rounded-lg p-4 backdrop-blur">
-              <div className="text-purple-100 text-sm sm:text-base font-medium mb-1">Total Events</div>
-              <div className="text-2xl sm:text-3xl font-bold">{stats.total}</div>
-            </div>
-            <div className="bg-white bg-opacity-20 rounded-lg p-4 backdrop-blur">
-              <div className="text-purple-100 text-sm sm:text-base font-medium mb-1">Cultural</div>
-              <div className="text-2xl sm:text-3xl font-bold">{stats.cultural}</div>
-            </div>
-            <div className="bg-white bg-opacity-20 rounded-lg p-4 backdrop-blur">
-              <div className="text-purple-100 text-sm sm:text-base font-medium mb-1">Sports</div>
-              <div className="text-2xl sm:text-3xl font-bold">{stats.sports}</div>
-            </div>
-            <div className="bg-white bg-opacity-20 rounded-lg p-4 backdrop-blur">
-              <div className="text-purple-100 text-sm sm:text-base font-medium mb-1">Open</div>
-              <div className="text-2xl sm:text-3xl font-bold">{stats.openRegistration}</div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+              <div className="bg-white/76 rounded-2xl p-4 border border-white/80">
+                <div className="text-slate-500 text-sm sm:text-base font-semibold mb-1">Total Events</div>
+                <div className="text-2xl sm:text-3xl font-extrabold">{stats.total}</div>
+              </div>
+              <div className="bg-white/76 rounded-2xl p-4 border border-white/80">
+                <div className="text-slate-500 text-sm sm:text-base font-semibold mb-1">Cultural</div>
+                <div className="text-2xl sm:text-3xl font-extrabold">{stats.cultural}</div>
+              </div>
+              <div className="bg-white/76 rounded-2xl p-4 border border-white/80">
+                <div className="text-slate-500 text-sm sm:text-base font-semibold mb-1">Sports</div>
+                <div className="text-2xl sm:text-3xl font-extrabold">{stats.sports}</div>
+              </div>
+              <div className="bg-white/76 rounded-2xl p-4 border border-white/80">
+                <div className="text-slate-500 text-sm sm:text-base font-semibold mb-1">Open</div>
+                <div className="text-2xl sm:text-3xl font-extrabold">{stats.openRegistration}</div>
+              </div>
             </div>
           </div>
         </div>
@@ -125,7 +126,7 @@ export const EventsDashboard: React.FC = () => {
       <main className="container-padded max-w-7xl mx-auto py-8">
         {/* Auth Prompt */}
         {!isAuthenticated && (
-          <div className="mb-8 p-4 bg-blue-50 border border-blue-200 rounded-lg flex items-start gap-3">
+          <div className="mb-8 p-4 bg-blue-50/90 border border-blue-200 rounded-xl flex items-start gap-3">
             <LogIn className="text-blue-600 flex-shrink-0 mt-0.5" size={20} />
             <div>
               <p className="text-sm text-blue-900 font-semibold mb-1">Sign in to register for events</p>
@@ -134,16 +135,16 @@ export const EventsDashboard: React.FC = () => {
           </div>
         )}
         {/* Filter Bar */}
-        <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-4 mb-8">
+        <div className="ios-card space-y-4 mb-8">
           {/* Search Bar */}
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" size={20} />
             <input
               type="text"
               placeholder="Search events by name or organizer..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="form-input pl-10"
             />
           </div>
 
@@ -151,11 +152,11 @@ export const EventsDashboard: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {/* Event Type Filter */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Event Type</label>
+              <label className="block text-sm font-semibold text-slate-700 mb-1">Event Type</label>
               <select
                 value={selectedEventType}
                 onChange={(e) => setSelectedEventType(e.target.value as EventType | 'all')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+                className="form-select text-sm"
               >
                 <option value="all">All Events</option>
                 <option value="cultural">Cultural</option>
@@ -165,11 +166,11 @@ export const EventsDashboard: React.FC = () => {
 
             {/* Registration Status Filter */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Registration</label>
+              <label className="block text-sm font-semibold text-slate-700 mb-1">Registration</label>
               <select
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value as RegistrationStatus | 'all')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+                className="form-select text-sm"
               >
                 <option value="all">All Status</option>
                 <option value="open">Open</option>
@@ -183,7 +184,7 @@ export const EventsDashboard: React.FC = () => {
               <button
                 onClick={handleReset}
                 disabled={!searchQuery && selectedEventType === 'all' && selectedStatus === 'all'}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="w-full btn-secondary text-sm disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Reset
               </button>

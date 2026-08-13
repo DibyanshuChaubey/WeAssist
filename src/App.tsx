@@ -20,17 +20,17 @@ function AppContent() {
   // Show loading screen while verifying token
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 to-purple-600">
-        <div className="text-center">
-          <Loader size={48} className="text-white animate-spin mx-auto mb-4" />
-          <p className="text-white text-lg font-medium">Loading...</p>
+      <div className="app-shell flex items-center justify-center p-6">
+        <div className="ios-surface-strong rounded-[30px] px-10 py-9 text-center animate-float-in">
+          <Loader size={44} className="text-blue-600 animate-spin mx-auto mb-4" />
+          <p className="text-slate-800 text-lg font-semibold tracking-tight">Loading your workspace...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="app-shell">
       <Routes>
         {/* Test route */}
         <Route path="/test" element={<div className="p-8 text-center"><h1 className="text-4xl font-bold">React is Working! ✓</h1></div>} />

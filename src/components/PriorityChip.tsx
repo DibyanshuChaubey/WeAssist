@@ -7,19 +7,19 @@ interface PriorityChipProps {
 
 const priorityConfig: Record<Priority, { bg: string; text: string; icon: boolean; label: string }> = {
   high: {
-    bg: 'bg-red-100',
+    bg: 'bg-red-100/80 border border-red-200/80',
     text: 'text-red-800',
     icon: true,
     label: 'High',
   },
   medium: {
-    bg: 'bg-orange-100',
+    bg: 'bg-amber-100/80 border border-amber-200/80',
     text: 'text-orange-800',
     icon: false,
     label: 'Medium',
   },
   low: {
-    bg: 'bg-gray-100',
+    bg: 'bg-slate-100/80 border border-slate-200/80',
     text: 'text-gray-800',
     icon: false,
     label: 'Low',
@@ -32,7 +32,7 @@ export const PriorityChip: React.FC<PriorityChipProps> = ({ priority }) => {
   const config = priorityConfig[normalizedPriority] || priorityConfig.low;
 
   return (
-    <div className={`inline-flex items-center gap-1 px-3 py-1 rounded-lg text-sm font-semibold ${config.bg} ${config.text}`}>
+    <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-semibold ${config.bg} ${config.text}`}>
       {config.icon && <AlertCircle size={16} />}
       {config.label}
     </div>

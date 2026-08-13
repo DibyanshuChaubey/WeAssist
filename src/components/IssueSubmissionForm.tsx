@@ -148,19 +148,19 @@ export const IssueSubmissionForm: React.FC<IssueSubmissionFormProps> = ({
   };
 
   return (
-    <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-4 sm:p-6">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">
+    <div className="max-w-2xl mx-auto ios-surface-strong rounded-[28px] p-4 sm:p-6 animate-float-in">
+      <h2 className="text-2xl font-extrabold tracking-tight mb-6 text-slate-800">
         Report New Issue
       </h2>
 
       {error && (
-        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-md">
+        <div className="mb-4 p-4 bg-red-50/90 border border-red-200 rounded-xl">
           <p className="text-red-700">{error}</p>
         </div>
       )}
 
       {success && (
-        <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-md">
+        <div className="mb-4 p-4 bg-green-50/90 border border-green-200 rounded-xl">
           <p className="text-green-700">{success}</p>
         </div>
       )}
@@ -170,7 +170,7 @@ export const IssueSubmissionForm: React.FC<IssueSubmissionFormProps> = ({
         <div>
           <label
             htmlFor="title"
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-semibold text-slate-700 mb-1"
           >
             Issue Title <span className="text-red-500">*</span>
           </label>
@@ -181,7 +181,7 @@ export const IssueSubmissionForm: React.FC<IssueSubmissionFormProps> = ({
             value={formData.title}
             onChange={handleChange}
             placeholder="Brief description of the issue"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="form-input"
             required
           />
         </div>
@@ -190,7 +190,7 @@ export const IssueSubmissionForm: React.FC<IssueSubmissionFormProps> = ({
         <div>
           <label
             htmlFor="category"
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-semibold text-slate-700 mb-1"
           >
             Category <span className="text-red-500">*</span>
           </label>
@@ -199,7 +199,7 @@ export const IssueSubmissionForm: React.FC<IssueSubmissionFormProps> = ({
             name="category"
             value={formData.category}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="form-select"
             required
           >
             <option value="">Select category</option>
@@ -215,7 +215,7 @@ export const IssueSubmissionForm: React.FC<IssueSubmissionFormProps> = ({
         <div>
           <label
             htmlFor="description"
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-semibold text-slate-700 mb-1"
           >
             Description <span className="text-red-500">*</span>
           </label>
@@ -226,7 +226,7 @@ export const IssueSubmissionForm: React.FC<IssueSubmissionFormProps> = ({
             onChange={handleChange}
             placeholder="Provide detailed information about the issue..."
             rows={4}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="form-textarea"
             required
           />
         </div>
@@ -235,7 +235,7 @@ export const IssueSubmissionForm: React.FC<IssueSubmissionFormProps> = ({
         <div>
           <label
             htmlFor="imageUrl"
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-semibold text-slate-700 mb-1"
           >
             Issue Image URL (Optional)
           </label>
@@ -246,10 +246,10 @@ export const IssueSubmissionForm: React.FC<IssueSubmissionFormProps> = ({
             value={formData.imageUrl}
             onChange={handleChange}
             placeholder="https://..."
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="form-input"
           />
           <div className="mt-2">
-            <label className="inline-flex w-full sm:w-auto justify-center items-center px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-sm font-medium text-gray-700 cursor-pointer transition-colors">
+            <label className="inline-flex w-full sm:w-auto justify-center items-center btn-secondary text-sm cursor-pointer">
               <input
                 type="file"
                 accept="image/png,image/jpeg,image/jpg,image/webp"
@@ -261,7 +261,7 @@ export const IssueSubmissionForm: React.FC<IssueSubmissionFormProps> = ({
             </label>
           </div>
           {formData.imageUrl && (
-            <div className="mt-3 rounded-md border border-gray-200 overflow-hidden">
+            <div className="mt-3 rounded-xl border border-slate-200/70 overflow-hidden">
               <img
                 src={formData.imageUrl}
                 alt="Issue preview"
@@ -279,7 +279,7 @@ export const IssueSubmissionForm: React.FC<IssueSubmissionFormProps> = ({
           <div>
             <label
               htmlFor="location.hostel"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-semibold text-slate-700 mb-1"
             >
               Hostel <span className="text-red-500">*</span>
             </label>
@@ -290,7 +290,7 @@ export const IssueSubmissionForm: React.FC<IssueSubmissionFormProps> = ({
               value={formData.location.hostel}
               onChange={handleChange}
               placeholder="e.g., Hostel A"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="form-input"
               required
             />
           </div>
@@ -298,7 +298,7 @@ export const IssueSubmissionForm: React.FC<IssueSubmissionFormProps> = ({
           <div>
             <label
               htmlFor="location.floor"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-semibold text-slate-700 mb-1"
             >
               Floor <span className="text-red-500">*</span>
             </label>
@@ -310,7 +310,7 @@ export const IssueSubmissionForm: React.FC<IssueSubmissionFormProps> = ({
               onChange={handleChange}
               placeholder="e.g., 2"
               min="1"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="form-input"
               required
             />
           </div>
@@ -318,7 +318,7 @@ export const IssueSubmissionForm: React.FC<IssueSubmissionFormProps> = ({
           <div>
             <label
               htmlFor="location.room"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-semibold text-slate-700 mb-1"
             >
               Room <span className="text-red-500">*</span>
             </label>
@@ -329,7 +329,7 @@ export const IssueSubmissionForm: React.FC<IssueSubmissionFormProps> = ({
               value={formData.location.room}
               onChange={handleChange}
               placeholder="e.g., 201"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="form-input"
               required
             />
           </div>
@@ -340,18 +340,18 @@ export const IssueSubmissionForm: React.FC<IssueSubmissionFormProps> = ({
           <button
             type="submit"
             disabled={loading}
-            className={`w-full py-3 px-4 rounded-md text-white font-medium transition-colors ${
+            className={`w-full py-3 px-4 rounded-[14px] text-white font-semibold transition-colors ${
               loading
                 ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-blue-600 hover:bg-blue-700'
+                : 'btn-primary'
             }`}
           >
             {loading ? 'Submitting...' : 'Submit Issue'}
           </button>
         </div>
 
-        <div className="mt-4 p-3 bg-blue-50 rounded-md">
-          <p className="text-sm text-blue-800">
+        <div className="mt-4 p-3 bg-blue-50/90 border border-blue-200/70 rounded-xl">
+          <p className="text-sm text-blue-800 leading-relaxed">
             <strong>Note:</strong> Once submitted, AI will automatically analyze
             and suggest priority for your issue. Admin will review and act
             accordingly.

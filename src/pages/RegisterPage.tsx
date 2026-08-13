@@ -89,10 +89,10 @@ export const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white rounded-lg shadow-xl overflow-hidden">
+    <div className="app-shell flex items-center justify-center p-4">
+      <div className="w-full max-w-md ios-surface-strong rounded-[26px] overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 text-center">
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
             <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center text-lg font-bold">
               WA
@@ -121,8 +121,8 @@ export const RegisterPage: React.FC = () => {
               value={formData.name}
               onChange={handleChange}
               placeholder="John Doe"
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                errors.name ? 'border-red-500' : 'border-gray-300'
+              className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                errors.name ? 'border-red-500' : 'border-slate-300/80'
               }`}
             />
             {errors.name && <p className="text-red-600 text-sm mt-1">{errors.name}</p>}
@@ -137,8 +137,8 @@ export const RegisterPage: React.FC = () => {
               value={formData.email}
               onChange={handleChange}
               placeholder="you@hostel.com"
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                errors.email ? 'border-red-500' : 'border-gray-300'
+              className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                errors.email ? 'border-red-500' : 'border-slate-300/80'
               }`}
             />
             {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email}</p>}
@@ -151,8 +151,8 @@ export const RegisterPage: React.FC = () => {
               name="hostel"
               value={formData.hostel}
               onChange={handleChange}
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                errors.hostel ? 'border-red-500' : 'border-gray-300'
+              className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                errors.hostel ? 'border-red-500' : 'border-slate-300/80'
               }`}
             >
               <option value="">Select your hostel</option>
@@ -175,8 +175,8 @@ export const RegisterPage: React.FC = () => {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="••••••••"
-                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-10 ${
-                  errors.password ? 'border-red-500' : 'border-gray-300'
+                className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-10 ${
+                  errors.password ? 'border-red-500' : 'border-slate-300/80'
                 }`}
               />
               <button
@@ -200,8 +200,8 @@ export const RegisterPage: React.FC = () => {
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 placeholder="••••••••"
-                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-10 ${
-                  errors.confirmPassword ? 'border-red-500' : 'border-gray-300'
+                className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-10 ${
+                  errors.confirmPassword ? 'border-red-500' : 'border-slate-300/80'
                 }`}
               />
               <button
@@ -219,7 +219,7 @@ export const RegisterPage: React.FC = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="w-full py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {loading && <Loader size={20} className="animate-spin" />}
             {loading ? 'Creating Account...' : 'Create Account'}
@@ -232,8 +232,8 @@ export const RegisterPage: React.FC = () => {
         </form>
 
         {/* Footer */}
-        <div className="px-6 py-4 bg-gray-50 text-center border-t border-gray-200">
-          <p className="text-gray-700">
+        <div className="px-6 py-4 bg-white/70 text-center border-t border-slate-200/70">
+          <p className="text-slate-700">
             Already have an account?{' '}
             <Link to="/login" className="text-blue-600 hover:underline font-semibold">
               Sign In

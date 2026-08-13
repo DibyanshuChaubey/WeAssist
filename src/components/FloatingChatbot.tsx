@@ -203,8 +203,8 @@ export const FloatingChatbot: React.FC = () => {
   return (
     <div className="fixed z-50 bottom-3 right-2 sm:bottom-6 sm:right-6">
       {isOpen && (
-        <section className="mb-3 w-[calc(100vw-1rem)] max-w-[24rem] sm:w-[24rem] h-[calc(100vh-8.5rem)] sm:h-[31rem] bg-white rounded-2xl border border-transparent shadow-2xl overflow-hidden flex flex-col animate-in fade-in duration-300">
-          <header className="px-4 py-3 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 text-white flex items-center justify-between">
+        <section className="mb-3 w-[calc(100vw-1rem)] max-w-[24rem] sm:w-[24rem] h-[calc(100vh-8.5rem)] sm:h-[31rem] ios-surface-strong rounded-[26px] overflow-hidden flex flex-col animate-float-in">
+          <header className="px-4 py-3 bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-600 text-white flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Sparkles size={18} className="animate-pulse" />
               <div>
@@ -235,14 +235,14 @@ export const FloatingChatbot: React.FC = () => {
             </div>
           </header>
 
-          <div className="px-3 py-3 border-b border-purple-100 bg-gradient-to-r from-purple-50 to-pink-50">
+          <div className="px-3 py-3 border-b border-slate-200/70 bg-white/70">
             <div className="flex flex-wrap gap-1.5">
               {quickPrompts.map((prompt) => (
                 <button
                   key={prompt}
                   type="button"
                   onClick={() => sendMessage(prompt)}
-                  className="w-full sm:w-auto text-left text-[11px] px-2.5 py-1.5 rounded-full border border-purple-200 bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 hover:from-purple-200 hover:to-pink-200 transition-all duration-200 font-medium"
+                  className="w-full sm:w-auto text-left text-[11px] px-2.5 py-1.5 rounded-full border border-slate-200/80 bg-white text-indigo-700 hover:bg-indigo-50 transition-all duration-200 font-medium"
                 >
                   {prompt}
                 </button>
@@ -250,7 +250,7 @@ export const FloatingChatbot: React.FC = () => {
             </div>
           </div>
 
-          <div ref={listRef} className="flex-1 overflow-y-auto px-3 py-3 space-y-3 bg-gradient-to-b from-slate-50 to-purple-50/30">
+          <div ref={listRef} className="flex-1 overflow-y-auto px-3 py-3 space-y-3 bg-gradient-to-b from-white/50 to-slate-50/70">
             {messages.map((msg, index) => (
               <div
                 key={msg.id}
@@ -259,8 +259,8 @@ export const FloatingChatbot: React.FC = () => {
                 <div
                   className={`max-w-[88%] rounded-2xl px-3 py-2.5 border text-sm ${
                     msg.role === 'user'
-                      ? 'bg-gradient-to-br from-indigo-600 to-purple-600 text-white border-transparent shadow-md'
-                      : 'bg-white text-gray-800 border-purple-100 shadow-sm'
+                      ? 'bg-gradient-to-br from-blue-600 to-indigo-600 text-white border-transparent shadow-md'
+                      : 'bg-white/95 text-slate-800 border-slate-200/70 shadow-sm'
                   }`}
                 >
                   <div className="flex items-center gap-1.5 mb-1 text-[11px] font-semibold uppercase tracking-wide opacity-80">
@@ -272,10 +272,10 @@ export const FloatingChatbot: React.FC = () => {
                   {msg.issues && msg.issues.length > 0 && (
                     <div className="mt-2.5 space-y-2">
                       {msg.issues.map((issue) => (
-                        <div key={issue.id} className="rounded-lg border border-purple-200 px-2.5 py-2 bg-gradient-to-r from-purple-50 to-pink-50 text-xs">
-                          <p className="font-semibold text-gray-900">{issue.title}</p>
+                        <div key={issue.id} className="rounded-xl border border-slate-200/80 px-2.5 py-2 bg-white/85 text-xs">
+                          <p className="font-semibold text-slate-900">{issue.title}</p>
                           <p className="text-purple-700 font-medium">Status: {issue.status}</p>
-                          <p className="text-gray-500">ID: {issue.id.slice(0, 8)}</p>
+                          <p className="text-slate-500">ID: {issue.id.slice(0, 8)}</p>
                         </div>
                       ))}
                     </div>
@@ -288,7 +288,7 @@ export const FloatingChatbot: React.FC = () => {
                           key={`${msg.id}-${suggestion}`}
                           type="button"
                           onClick={() => sendMessage(suggestion)}
-                          className="text-[11px] px-2 py-1 rounded-full border border-purple-200 bg-purple-50 text-purple-700 hover:bg-purple-100 transition-all duration-200 font-medium"
+                          className="text-[11px] px-2 py-1 rounded-full border border-slate-200/80 bg-white text-indigo-700 hover:bg-indigo-50 transition-all duration-200 font-medium"
                         >
                           {suggestion}
                         </button>
@@ -301,7 +301,7 @@ export const FloatingChatbot: React.FC = () => {
 
             {isLoading && (
               <div className="flex justify-start">
-                <div className="max-w-[88%] rounded-2xl px-3 py-2.5 border text-sm bg-white text-gray-700 border-purple-100 shadow-sm animate-pulse">
+                <div className="max-w-[88%] rounded-2xl px-3 py-2.5 border text-sm bg-white text-slate-700 border-slate-200/80 shadow-sm animate-pulse">
                   Thinking...
                 </div>
               </div>
@@ -313,19 +313,19 @@ export const FloatingChatbot: React.FC = () => {
               e.preventDefault();
               sendMessage();
             }}
-            className="border-t border-purple-100 bg-gradient-to-r from-purple-50 to-pink-50 px-3 py-2"
+            className="border-t border-slate-200/70 bg-white/70 px-3 py-2"
           >
             <div className="flex items-center gap-2">
               <input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask a question..."
-                className="flex-1 px-3 py-2.5 text-sm rounded-xl border border-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-1 bg-white"
+                className="form-input flex-1 text-sm"
               />
               <button
                 type="submit"
                 disabled={!input.trim() || isLoading}
-                className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-400 text-white transition-all duration-200"
+                className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:from-gray-400 disabled:to-gray-400 text-white transition-all duration-200"
                 aria-label="Send message"
               >
                 <SendHorizonal size={16} />
@@ -339,7 +339,7 @@ export const FloatingChatbot: React.FC = () => {
         <button
           type="button"
           onClick={() => setIsOpen(true)}
-          className="group relative inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 text-white px-4 py-3 min-h-11 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-110 hover:-translate-y-1"
+          className="group relative inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 text-white px-4 py-3 min-h-11 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-110 hover:-translate-y-1"
           aria-label="Toggle AI assistant"
         >
           <Bot size={18} className="group-hover:scale-110 transition-transform" />

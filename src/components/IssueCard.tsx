@@ -25,17 +25,17 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, onClick, onConfirmR
 
   return (
     <div
-      className={`bg-white rounded-xl border transition-all duration-300 cursor-pointer h-full flex flex-col hover:shadow-xl hover:translate-y-[-8px] group shadow-md ${
-        isUrgent ? 'border-red-300 bg-red-50/50 hover:border-red-400' : 'border-gray-200/50 hover:border-blue-300/50'
+      className={`rounded-[22px] border transition-all duration-300 cursor-pointer h-full flex flex-col hover:shadow-2xl hover:translate-y-[-6px] group ios-surface ${
+        isUrgent ? 'border-red-300/70 bg-red-50/40 hover:border-red-400' : 'hover:border-blue-300/70'
       }`}
       onClick={() => onClick?.(issue)}
     >
       {/* Urgent Badge */}
       {isUrgent && (
         <div className="px-5 pt-4 pb-0">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-red-200 text-red-700 animate-pulse">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-red-200/80 text-red-700 animate-pulse">
             <AlertCircle size={14} />
-            🚨 Urgent
+            Urgent
           </div>
         </div>
       )}
@@ -43,12 +43,12 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, onClick, onConfirmR
       <div className="p-4 sm:p-5 flex-1 flex flex-col">
         {/* Header */}
         <div className="flex-1">
-          <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">{issue.title}</h3>
-          <p className="text-sm text-gray-600 line-clamp-2 mb-4">{issue.description}</p>
+          <h3 className="text-lg font-extrabold tracking-tight text-slate-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">{issue.title}</h3>
+          <p className="text-sm text-slate-600 line-clamp-2 mb-4">{issue.description}</p>
         </div>
 
         {issue.imageUrl && (
-          <div className="mb-4 rounded-lg overflow-hidden border border-gray-200/50 aspect-video bg-gray-200">
+          <div className="mb-4 rounded-xl overflow-hidden border border-slate-200/70 aspect-video bg-slate-200">
             <img
               src={issue.imageUrl}
               alt={issue.title}
@@ -60,7 +60,7 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, onClick, onConfirmR
         {/* Category and Location */}
         <div className="flex items-start justify-between mb-4 gap-2 flex-wrap">
           <CategoryTag category={issue.category} variant="filled" />
-          <div className="inline-flex items-center gap-1.5 text-xs text-gray-700 bg-gray-100/80 px-3 py-1.5 rounded-lg font-semibold">
+          <div className="inline-flex items-center gap-1.5 text-xs text-slate-700 bg-white/80 px-3 py-1.5 rounded-xl border border-slate-200/70 font-semibold">
             <MapPin size={14} />
             <span className="line-clamp-2 sm:line-clamp-1">
               {issue.location.hostel} • Fl{issue.location.floor} Rm{issue.location.room}
@@ -74,10 +74,10 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, onClick, onConfirmR
           <PriorityChip priority={displayPriority} />
           {isAdmin && issue.priorityAiSuggested && (
             <span className="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded-full font-semibold" title={`AI Suggested: ${issue.priorityAiSuggested}`}>
-              🤖 AI
+              AI
             </span>
           )}
-          {isReporter && <span className="text-xs bg-blue-100 text-blue-800 px-3 py-1.5 rounded-full font-semibold">📝 Your Report</span>}
+          {isReporter && <span className="text-xs bg-blue-100 text-blue-800 px-3 py-1.5 rounded-full font-semibold">Your Report</span>}
         </div>
 
         {/* Tags */}
@@ -98,9 +98,9 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, onClick, onConfirmR
 
         {/* Admin Notes (visible to everyone) */}
         {issue.adminNotes && issue.adminNotes.length > 0 && (
-          <div className="mb-4 p-4 bg-amber-50/80 border border-amber-200/50 rounded-lg text-xs">
+          <div className="mb-4 p-4 bg-amber-50/80 border border-amber-200/50 rounded-xl text-xs">
             <div className="font-bold text-amber-900 mb-2 flex items-center gap-1.5">
-              📝 Latest Update
+              Latest Update
             </div>
             <p className="text-amber-800 mb-2">{issue.adminNotes[issue.adminNotes.length - 1].content}</p>
             <p className="text-amber-700 text-xs font-medium">— {issue.adminNotes[issue.adminNotes.length - 1].adminName}</p>
@@ -108,7 +108,7 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, onClick, onConfirmR
         )}
 
         {/* Footer */}
-        <div className="pt-4 border-t border-gray-100">
+        <div className="pt-4 border-t border-slate-200/70">
           <div className="space-y-2.5 mb-4">
             <div className="flex items-center gap-2.5 text-sm text-gray-700 font-medium">
               <User size={16} className="flex-shrink-0 text-blue-600" />

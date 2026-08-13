@@ -8,22 +8,22 @@ interface PaginationProps {
 
 export const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPageChange }) => {
   return (
-    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between py-6">
-      <div className="text-sm text-gray-600 text-center sm:text-left">
-        Page <span className="font-semibold text-gray-900">{currentPage}</span> of{' '}
-        <span className="font-semibold text-gray-900">{totalPages}</span>
+    <div className="ios-card flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between py-4">
+      <div className="text-sm text-slate-600 text-center sm:text-left">
+        Page <span className="font-semibold text-slate-900">{currentPage}</span> of{' '}
+        <span className="font-semibold text-slate-900">{totalPages}</span>
       </div>
 
       <div className="flex items-center justify-center gap-2">
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="inline-flex items-center justify-center w-11 h-11 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="inline-flex items-center justify-center w-11 h-11 border border-slate-300/70 bg-white/70 rounded-xl hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           <ChevronLeft size={20} />
         </button>
 
-        <div className="inline-flex sm:hidden items-center justify-center min-w-11 h-11 px-3 rounded-lg border border-gray-300 text-sm font-semibold text-gray-700">
+        <div className="inline-flex sm:hidden items-center justify-center min-w-11 h-11 px-3 rounded-xl border border-slate-300/70 text-sm font-semibold text-slate-700 bg-white/70">
           {currentPage}
         </div>
 
@@ -34,8 +34,8 @@ export const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages,
               onClick={() => onPageChange(page)}
               className={`w-11 h-11 rounded-lg font-medium transition-colors ${
                 page === currentPage
-                  ? 'bg-brand-600 text-white'
-                  : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
+                  ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md'
+                  : 'border border-slate-300/70 text-slate-700 bg-white/70 hover:bg-white'
               }`}
             >
               {page}
@@ -46,7 +46,7 @@ export const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages,
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="inline-flex items-center justify-center w-11 h-11 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="inline-flex items-center justify-center w-11 h-11 border border-slate-300/70 bg-white/70 rounded-xl hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           <ChevronRight size={20} />
         </button>
