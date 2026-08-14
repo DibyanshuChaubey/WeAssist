@@ -98,38 +98,55 @@ export const Navigation: React.FC = () => {
           </div>
 
           {/* Right Section - User Profile / Login */}
-          <div className="hidden md:flex items-center gap-2 lg:gap-3 shrink-0">
+          <div className="hidden md:flex items-center gap-2.5 lg:gap-3 shrink-0">
             <ThemeToggle compact />
             {isAuthenticated ? (
               <>
-                <div className="hidden xl:flex items-center gap-2.5 px-4 py-2 bg-white/70 rounded-xl border border-white/80 max-w-[18rem]">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-xs font-bold shadow-md">
+                {/* XL: Full Profile Card */}
+                <div className="hidden xl:flex items-center gap-2.5 px-4 py-2 bg-white/70 rounded-xl border border-white/80 min-w-0 max-w-xs">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-xs font-bold shadow-md shrink-0">
                     {currentUser?.name?.split(' ').map(n => n[0]).join('')}
                   </div>
-                  <div className="flex flex-col min-w-0">
+                  <div className="flex flex-col min-w-0 flex-1">
                     <span className="text-sm font-semibold text-slate-900 truncate">{currentUser?.name}</span>
                     <span className="text-xs text-slate-600 truncate">{currentUser?.email}</span>
                   </div>
-                  {isAdmin && <span className="text-xs font-bold text-red-600 ml-2 bg-red-100 px-2 py-1 rounded">Admin</span>}
-                  {currentUser?.status === 'pending_verification' && (
-                    <span className="text-xs font-bold text-yellow-600 ml-2 bg-yellow-100 px-2 py-1 rounded">Pending</span>
-                  )}
-                  {currentUser?.status === 'verified' && !isAdmin && (
-                    <span className="text-xs font-bold text-green-600 ml-2 bg-green-100 px-2 py-1 rounded">Verified</span>
-                  )}
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    {isAdmin && <span className="text-xs font-bold text-red-600 bg-red-100 px-1.5 py-0.5 rounded whitespace-nowrap">Admin</span>}
+                    {currentUser?.status === 'pending_verification' && (
+                      <span className="text-xs font-bold text-yellow-600 bg-yellow-100 px-1.5 py-0.5 rounded whitespace-nowrap">Pending</span>
+                    )}
+                    {currentUser?.status === 'verified' && !isAdmin && (
+                      <span className="text-xs font-bold text-green-600 bg-green-100 px-1.5 py-0.5 rounded whitespace-nowrap">Verified</span>
+                    )}
+                  </div>
                 </div>
 
-                <div className="hidden md:flex xl:hidden items-center justify-center w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-white text-xs font-bold shadow-sm">
+                {/* LG: Profile with Avatar and Status Badge */}
+                <div className="hidden lg:flex xl:hidden items-center gap-2.5 px-3 py-2 bg-white/70 rounded-xl border border-white/80 min-w-0">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-xs font-bold shadow-md shrink-0">
+                    {currentUser?.name?.split(' ').map(n => n[0]).join('')}
+                  </div>
+                  <div className="flex flex-col min-w-0 flex-1">
+                    <span className="text-sm font-semibold text-slate-900 truncate">{currentUser?.name}</span>
+                    <span className="text-xs text-slate-500">
+                      {isAdmin ? 'Admin' : currentUser?.status === 'verified' ? 'Verified' : 'Pending'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* MD: Avatar Only */}
+                <div className="hidden md:flex lg:hidden items-center justify-center w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-white text-xs font-bold shadow-sm">
                   {currentUser?.name?.split(' ').map(n => n[0]).join('')}
                 </div>
 
                 <button
                   onClick={handleLogout}
-                  className="flex items-center gap-1.5 px-2.5 lg:px-3.5 py-2.5 min-h-10 lg:min-h-11 text-slate-700 hover:bg-red-50 hover:text-red-700 rounded-xl transition-all duration-200 font-medium text-sm"
+                  className="flex items-center gap-1.5 px-2.5 lg:px-3.5 py-2.5 min-h-10 lg:min-h-11 text-slate-700 hover:bg-red-50 hover:text-red-700 rounded-xl transition-all duration-200 font-medium text-sm whitespace-nowrap"
                   title="Sign out"
                 >
                   <LogOut size={18} />
-                  <span className="hidden xl:inline">Sign Out</span>
+                  <span className="hidden lg:inline">Sign Out</span>
                 </button>
               </>
             ) : (
