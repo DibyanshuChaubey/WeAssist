@@ -1,10 +1,8 @@
-// Student Dashboard Page
-
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { IssuesFeed } from '../components/IssuesFeed';
 import { IssueSubmissionForm } from '../components/IssueSubmissionForm';
-import { Header } from '../components/Header';
+import { Navigation } from '../components/Navigation';
 
 export const StudentDashboard: React.FC = () => {
   const { currentUser } = useAuth();
@@ -13,47 +11,49 @@ export const StudentDashboard: React.FC = () => {
 
   const handleIssueSubmitted = () => {
     setActiveTab('feed');
-    setRefreshKey((prev) => prev + 1); // Trigger refresh of feed
+    setRefreshKey((prev) => prev + 1);
   };
 
   return (
-    <div className="app-shell">
-      <Header />
+    <div className="app-shell min-h-screen">
+      <Navigation />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Welcome Section */}
-        <div className="ios-surface rounded-[24px] p-6 mb-8 animate-float-in">
-          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">
-            Welcome, {currentUser?.name}!
-          </h1>
-          <p className="text-slate-600 mt-2">
-            Hostel: <span className="font-semibold">{currentUser?.hostel}</span>
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <section className="ios-surface-strong mb-8 rounded-[30px] p-6 sm:p-8">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-600">Student portal</p>
+              <h1 className="mt-3 text-3xl font-black tracking-[-0.06em] text-slate-900 sm:text-4xl">
+                Welcome back, {currentUser?.name}.
+              </h1>
+            </div>
+            <div className="rounded-2xl border border-slate-200/80 bg-white/70 px-4 py-3 text-sm text-slate-700 backdrop-blur-sm">
+              Hostel: <span className="font-semibold text-slate-900">{currentUser?.hostel}</span>
+            </div>
+          </div>
+          <p className="mt-4 max-w-2xl text-sm text-slate-600 sm:text-base">
+            Report issues, monitor updates, and stay on top of your hostel experience with a clearer, calmer operations flow.
           </p>
-          <p className="text-slate-500 mt-1 text-sm">
-            Report issues, track progress, and view all hostel complaints
-            transparently.
-          </p>
-        </div>
+        </section>
 
-        {/* Tabs */}
-        <div className="mb-6">
-          <div className="flex space-x-4 border-b border-slate-200/70">
+        <div className="mb-6 rounded-[22px] border border-slate-200/80 bg-white/65 p-2 shadow-sm backdrop-blur-sm">
+          <div className="flex flex-col gap-2 sm:flex-row">
             <button
               onClick={() => setActiveTab('feed')}
-              className={`pb-4 px-2 font-medium transition-colors ${
+              className={`flex-1 rounded-2xl px-4 py-3 text-sm font-semibold transition-all ${
                 activeTab === 'feed'
-                  ? 'border-b-2 border-blue-600 text-blue-700'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/20'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
               }`}
             >
               All Issues
             </button>
             <button
               onClick={() => setActiveTab('submit')}
-              className={`pb-4 px-2 font-medium transition-colors ${
+              className={`flex-1 rounded-2xl px-4 py-3 text-sm font-semibold transition-all ${
                 activeTab === 'submit'
-                  ? 'border-b-2 border-blue-600 text-blue-700'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/20'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
               }`}
             >
               Report New Issue
@@ -61,14 +61,10 @@ export const StudentDashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* Content */}
         <div>
           {activeTab === 'feed' && <IssuesFeed key={refreshKey} />}
           {activeTab === 'submit' && (
-            <IssueSubmissionForm
-              userHostel={currentUser?.hostel}
-              onSuccess={handleIssueSubmitted}
-            />
+            <IssueSubmissionForm userHostel={currentUser?.hostel} onSuccess={handleIssueSubmitted} />
           )}
         </div>
       </div>

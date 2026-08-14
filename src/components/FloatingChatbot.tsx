@@ -203,46 +203,48 @@ export const FloatingChatbot: React.FC = () => {
   return (
     <div className="fixed z-50 bottom-3 right-2 sm:bottom-6 sm:right-6">
       {isOpen && (
-        <section className="mb-3 w-[calc(100vw-1rem)] max-w-[24rem] sm:w-[24rem] h-[calc(100vh-8.5rem)] sm:h-[31rem] ios-surface-strong rounded-[26px] overflow-hidden flex flex-col animate-float-in">
+        <section className="mb-3 w-[calc(100vw-1rem)] max-w-[24rem] sm:w-[24rem] h-[calc(100vh-8.5rem)] sm:h-[31rem] ios-surface-strong rounded-[28px] overflow-hidden flex flex-col animate-float-in shadow-[0_30px_80px_rgba(31,53,111,0.22)]">
           <header className="px-4 py-3 bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-600 text-white flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Sparkles size={18} className="animate-pulse" />
+            <div className="flex items-center gap-2.5">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/15 ring-1 ring-white/20">
+                <Sparkles size={16} className="animate-pulse" />
+              </div>
               <div>
-                <p className="font-bold text-sm">✨ AI Assistant</p>
-                <p className="text-[11px] text-purple-100">
+                <p className="font-bold text-sm">AI Assistant</p>
+                <p className="text-[11px] text-purple-100/95">
                   {isAuthenticated ? 'Personalized support enabled' : 'Sign in for personal issue status'}
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1.5">
               <button
                 type="button"
                 onClick={clearChatHistory}
-                className="p-1.5 rounded-lg hover:bg-white/30 transition-all duration-200 hover:scale-110"
+                className="p-1.5 rounded-lg hover:bg-white/20 transition-all duration-200 hover:scale-105"
                 title="Clear chat history"
                 aria-label="Clear chat history"
               >
-                <Trash2 size={16} />
+                <Trash2 size={15} />
               </button>
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
-                className="p-1.5 rounded-lg hover:bg-white/30 transition-all duration-200 hover:scale-110"
+                className="p-1.5 rounded-lg hover:bg-white/20 transition-all duration-200 hover:scale-105"
                 aria-label="Close assistant"
               >
-                <X size={16} />
+                <X size={15} />
               </button>
             </div>
           </header>
 
-          <div className="px-3 py-3 border-b border-slate-200/70 bg-white/70">
+          <div className="px-3 py-3 border-b border-slate-200/70 bg-white/60 backdrop-blur-sm">
             <div className="flex flex-wrap gap-1.5">
               {quickPrompts.map((prompt) => (
                 <button
                   key={prompt}
                   type="button"
                   onClick={() => sendMessage(prompt)}
-                  className="w-full sm:w-auto text-left text-[11px] px-2.5 py-1.5 rounded-full border border-slate-200/80 bg-white text-indigo-700 hover:bg-indigo-50 transition-all duration-200 font-medium"
+                  className="w-full sm:w-auto text-left text-[11px] px-2.5 py-1.5 rounded-full border border-slate-200/80 bg-white/85 text-indigo-700 hover:bg-indigo-50 transition-all duration-200 font-medium shadow-sm"
                 >
                   {prompt}
                 </button>
@@ -250,20 +252,20 @@ export const FloatingChatbot: React.FC = () => {
             </div>
           </div>
 
-          <div ref={listRef} className="flex-1 overflow-y-auto px-3 py-3 space-y-3 bg-gradient-to-b from-white/50 to-slate-50/70">
+          <div ref={listRef} className="flex-1 overflow-y-auto px-3 py-3 space-y-3 bg-gradient-to-b from-slate-50/80 via-white/70 to-indigo-50/40">
             {messages.map((msg, index) => (
               <div
                 key={msg.id}
                 className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-[88%] rounded-2xl px-3 py-2.5 border text-sm ${
+                  className={`max-w-[88%] rounded-2xl px-3 py-2.5 border text-sm shadow-sm ${
                     msg.role === 'user'
-                      ? 'bg-gradient-to-br from-blue-600 to-indigo-600 text-white border-transparent shadow-md'
-                      : 'bg-white/95 text-slate-800 border-slate-200/70 shadow-sm'
+                      ? 'bg-gradient-to-br from-blue-600 to-indigo-600 text-white border-transparent shadow-indigo-200/50'
+                      : 'bg-white/90 text-slate-800 border-slate-200/80 shadow-slate-100/80'
                   }`}
                 >
-                  <div className="flex items-center gap-1.5 mb-1 text-[11px] font-semibold uppercase tracking-wide opacity-80">
+                  <div className="flex items-center gap-1.5 mb-1 text-[11px] font-semibold uppercase tracking-[0.12em] opacity-80">
                     {msg.role === 'user' ? <User size={12} /> : <Bot size={12} />}
                     {msg.role === 'user' ? 'You' : 'Assistant'}
                   </div>
@@ -272,9 +274,9 @@ export const FloatingChatbot: React.FC = () => {
                   {msg.issues && msg.issues.length > 0 && (
                     <div className="mt-2.5 space-y-2">
                       {msg.issues.map((issue) => (
-                        <div key={issue.id} className="rounded-xl border border-slate-200/80 px-2.5 py-2 bg-white/85 text-xs">
+                        <div key={issue.id} className="rounded-xl border border-slate-200/80 px-2.5 py-2 bg-white/90 text-xs">
                           <p className="font-semibold text-slate-900">{issue.title}</p>
-                          <p className="text-purple-700 font-medium">Status: {issue.status}</p>
+                          <p className="text-violet-700 font-medium">Status: {issue.status}</p>
                           <p className="text-slate-500">ID: {issue.id.slice(0, 8)}</p>
                         </div>
                       ))}
@@ -301,7 +303,7 @@ export const FloatingChatbot: React.FC = () => {
 
             {isLoading && (
               <div className="flex justify-start">
-                <div className="max-w-[88%] rounded-2xl px-3 py-2.5 border text-sm bg-white text-slate-700 border-slate-200/80 shadow-sm animate-pulse">
+                <div className="max-w-[88%] rounded-2xl px-3 py-2.5 border text-sm bg-white/90 text-slate-700 border-slate-200/80 shadow-sm animate-pulse">
                   Thinking...
                 </div>
               </div>
@@ -313,7 +315,7 @@ export const FloatingChatbot: React.FC = () => {
               e.preventDefault();
               sendMessage();
             }}
-            className="border-t border-slate-200/70 bg-white/70 px-3 py-2"
+            className="border-t border-slate-200/70 bg-white/70 px-3 py-2 backdrop-blur-sm"
           >
             <div className="flex items-center gap-2">
               <input
@@ -325,7 +327,7 @@ export const FloatingChatbot: React.FC = () => {
               <button
                 type="submit"
                 disabled={!input.trim() || isLoading}
-                className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:from-gray-400 disabled:to-gray-400 text-white transition-all duration-200"
+                className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:from-gray-400 disabled:to-gray-400 text-white transition-all duration-200 shadow-md shadow-blue-500/25"
                 aria-label="Send message"
               >
                 <SendHorizonal size={16} />
@@ -339,7 +341,7 @@ export const FloatingChatbot: React.FC = () => {
         <button
           type="button"
           onClick={() => setIsOpen(true)}
-          className="group relative inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 text-white px-4 py-3 min-h-11 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-110 hover:-translate-y-1"
+          className="group relative inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 text-white px-4 py-3 min-h-11 shadow-[0_20px_50px_rgba(53,83,214,0.42)] hover:shadow-[0_28px_60px_rgba(53,83,214,0.55)] transition-all duration-300 hover:scale-105 hover:-translate-y-1"
           aria-label="Toggle AI assistant"
         >
           <Bot size={18} className="group-hover:scale-110 transition-transform" />

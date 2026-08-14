@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { AlertCircle, Eye, EyeOff, Loader } from 'lucide-react';
+import { AlertCircle, Eye, EyeOff, Loader, ArrowLeft } from 'lucide-react';
+import { ThemeToggle } from '../context/ThemeContext';
 import { getApiBaseUrl } from '../utils/apiBaseUrl';
 
 const API_URL = getApiBaseUrl();
@@ -20,16 +21,7 @@ export const RegisterPage: React.FC = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [serverError, setServerError] = useState('');
 
-  const hostels = [
-    'Hostel A',
-    'Hostel B',
-    'Hostel C',
-    'Hostel D',
-    'Hostel E',
-    'Hostel F',
-    'Hostel G',
-    'Hostel H',
-  ];
+  const hostels = ['Hostel A', 'Hostel B', 'Hostel C', 'Hostel D', 'Hostel E', 'Hostel F', 'Hostel G', 'Hostel H'];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -79,9 +71,8 @@ export const RegisterPage: React.FC = () => {
         return;
       }
 
-      // Registration successful
       navigate('/login', { state: { message: 'Registration successful! Please sign in.' } });
-    } catch (error) {
+    } catch {
       setServerError('An error occurred. Please try again.');
     } finally {
       setLoading(false);
@@ -89,156 +80,99 @@ export const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="app-shell flex items-center justify-center p-4">
-      <div className="w-full max-w-md ios-surface-strong rounded-[26px] overflow-hidden">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 text-center">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center text-lg font-bold">
-              WA
-            </div>
-          </div>
-          <h1 className="text-2xl font-bold">Create Account</h1>
-          <p className="text-blue-100 mt-2">Join WeAssist to get started</p>
+    <div className="app-shell relative flex min-h-screen items-center justify-center overflow-hidden p-4 sm:p-6">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(96,165,250,0.18),transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(168,85,247,0.18),transparent_32%)]" />
+      <div className="relative w-full max-w-5xl">
+        <div className="mb-5 flex items-center justify-between">
+          <button
+            onClick={() => navigate('/')}
+            className="inline-flex items-center gap-2 rounded-full border border-slate-200/80 bg-white/70 px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm backdrop-blur-sm transition-all hover:bg-white"
+          >
+            <ArrowLeft size={15} />
+            Back home
+          </button>
+          <ThemeToggle compact />
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleRegister} className="p-6 space-y-4">
-          {/* Server Error */}
-          {serverError && (
-            <div className="p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
-              <AlertCircle className="text-red-600 mt-0.5 flex-shrink-0" size={20} />
-              <p className="text-red-800 text-sm">{serverError}</p>
+        <div className="mx-auto w-full max-w-lg animate-fade-in">
+          <div className="mb-8 text-center">
+            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-[24px] bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-600 text-white shadow-[0_20px_40px_rgba(79,70,229,0.35)]">
+              WA
             </div>
-          )}
-
-          {/* Name */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="John Doe"
-              className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                errors.name ? 'border-red-500' : 'border-slate-300/80'
-              }`}
-            />
-            {errors.name && <p className="text-red-600 text-sm mt-1">{errors.name}</p>}
+            <h1 className="text-4xl font-black tracking-[-0.06em] text-slate-900">Create account</h1>
+            <p className="mt-2 text-base text-slate-600">Join WeAssist and unlock campus access</p>
           </div>
 
-          {/* Email */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="you@hostel.com"
-              className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                errors.email ? 'border-red-500' : 'border-slate-300/80'
-              }`}
-            />
-            {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email}</p>}
-          </div>
+          <div className="ios-surface-strong rounded-[30px] overflow-hidden">
+            <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 p-6 text-center text-white">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-100">Welcome</p>
+              <h2 className="mt-2 text-2xl font-bold">Start your student profile</h2>
+            </div>
 
-          {/* Hostel */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Hostel</label>
-            <select
-              name="hostel"
-              value={formData.hostel}
-              onChange={handleChange}
-              className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                errors.hostel ? 'border-red-500' : 'border-slate-300/80'
-              }`}
-            >
-              <option value="">Select your hostel</option>
-              {hostels.map((hostel) => (
-                <option key={hostel} value={hostel}>
-                  {hostel}
-                </option>
-              ))}
-            </select>
-            {errors.hostel && <p className="text-red-600 text-sm mt-1">{errors.hostel}</p>}
-          </div>
+            <form onSubmit={handleRegister} className="space-y-4 p-5 sm:p-6">
+              {serverError && (
+                <div className="flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                  <AlertCircle className="mt-0.5 shrink-0" size={18} />
+                  <p>{serverError}</p>
+                </div>
+              )}
 
-          {/* Password */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
-            <div className="relative">
-              <input
-                type={showPassword ? 'text' : 'password'}
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="••••••••"
-                className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-10 ${
-                  errors.password ? 'border-red-500' : 'border-slate-300/80'
-                }`}
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-2.5 text-gray-600"
-              >
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-slate-700">Full Name</label>
+                <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="John Doe" className={`form-input ${errors.name ? 'border-red-300' : ''}`} />
+                {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-slate-700">Email Address</label>
+                <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="you@hostel.com" className={`form-input ${errors.email ? 'border-red-300' : ''}`} />
+                {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-slate-700">Hostel</label>
+                <select name="hostel" value={formData.hostel} onChange={handleChange} className={`form-select ${errors.hostel ? 'border-red-300' : ''}`}>
+                  <option value="">Select your hostel</option>
+                  {hostels.map((hostel) => (
+                    <option key={hostel} value={hostel}>{hostel}</option>
+                  ))}
+                </select>
+                {errors.hostel && <p className="mt-1 text-sm text-red-600">{errors.hostel}</p>}
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-slate-700">Password</label>
+                <div className="relative">
+                  <input type={showPassword ? 'text' : 'password'} name="password" value={formData.password} onChange={handleChange} placeholder="••••••••" className={`form-input pr-11 ${errors.password ? 'border-red-300' : ''}`} />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-3 text-slate-500">
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+                {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-slate-700">Confirm Password</label>
+                <div className="relative">
+                  <input type={showConfirmPassword ? 'text' : 'password'} name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} placeholder="••••••••" className={`form-input pr-11 ${errors.confirmPassword ? 'border-red-300' : ''}`} />
+                  <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-3 text-slate-500">
+                    {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+                {errors.confirmPassword && <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>}
+              </div>
+
+              <button type="submit" disabled={loading} className="btn-primary flex w-full items-center justify-center gap-2 py-3 disabled:cursor-not-allowed disabled:opacity-60">
+                {loading && <Loader size={18} className="animate-spin" />}
+                {loading ? 'Creating account...' : 'Create Account'}
               </button>
+            </form>
+
+            <div className="border-t border-slate-200/80 bg-white/40 px-5 py-4 text-center text-sm text-slate-600">
+              Already have an account?{' '}
+              <Link to="/login" className="font-semibold text-blue-600 hover:text-blue-700">Sign in</Link>
             </div>
-            {errors.password && <p className="text-red-600 text-sm mt-1">{errors.password}</p>}
           </div>
-
-          {/* Confirm Password */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
-            <div className="relative">
-              <input
-                type={showConfirmPassword ? 'text' : 'password'}
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                placeholder="••••••••"
-                className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-10 ${
-                  errors.confirmPassword ? 'border-red-500' : 'border-slate-300/80'
-                }`}
-              />
-              <button
-                type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-2.5 text-gray-600"
-              >
-                {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-              </button>
-            </div>
-            {errors.confirmPassword && <p className="text-red-600 text-sm mt-1">{errors.confirmPassword}</p>}
-          </div>
-
-          {/* Register Button */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-          >
-            {loading && <Loader size={20} className="animate-spin" />}
-            {loading ? 'Creating Account...' : 'Create Account'}
-          </button>
-
-          {/* Note about verification */}
-          <p className="text-sm text-gray-600 text-center mt-4">
-            Your account will be pending admin verification after registration.
-          </p>
-        </form>
-
-        {/* Footer */}
-        <div className="px-6 py-4 bg-white/70 text-center border-t border-slate-200/70">
-          <p className="text-slate-700">
-            Already have an account?{' '}
-            <Link to="/login" className="text-blue-600 hover:underline font-semibold">
-              Sign In
-            </Link>
-          </p>
         </div>
       </div>
     </div>

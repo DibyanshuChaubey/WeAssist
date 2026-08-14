@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AlertCircle, Calendar, LogOut, Settings, LogIn, CheckCircle2, Home, MessageSquare, Menu, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { ThemeToggle } from '../context/ThemeContext';
 
 export const Navigation: React.FC = () => {
   const location = useLocation();
@@ -98,6 +99,7 @@ export const Navigation: React.FC = () => {
 
           {/* Right Section - User Profile / Login */}
           <div className="hidden md:flex items-center gap-2 lg:gap-3 shrink-0">
+            <ThemeToggle compact />
             {isAuthenticated ? (
               <>
                 <div className="hidden xl:flex items-center gap-2.5 px-4 py-2 bg-white/70 rounded-xl border border-white/80 max-w-[18rem]">
@@ -143,6 +145,7 @@ export const Navigation: React.FC = () => {
 
           {/* Mobile Actions */}
           <div className="flex md:hidden items-center gap-2">
+            <ThemeToggle compact />
             {!isAuthenticated ? (
               <Link
                 to="/login"

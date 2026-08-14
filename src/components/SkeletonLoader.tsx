@@ -1,27 +1,23 @@
 // Loading skeleton for cards
 export const IssueCardSkeleton: React.FC = () => {
   return (
-    <div className="ios-card animate-pulse">
-      {/* Title */}
-      <div className="h-5 bg-slate-200 rounded mb-3 w-3/4" />
+    <div className="ios-card animate-pulse bg-white/70">
+      <div className="h-5 bg-slate-200/90 rounded-xl mb-3 w-3/4" />
 
-      {/* Description */}
       <div className="space-y-2 mb-4">
-        <div className="h-4 bg-slate-200 rounded w-full" />
-        <div className="h-4 bg-slate-200 rounded w-5/6" />
+        <div className="h-4 bg-slate-200/90 rounded-lg w-full" />
+        <div className="h-4 bg-slate-200/90 rounded-lg w-5/6" />
       </div>
 
-      {/* Badges */}
       <div className="flex gap-2 mb-4">
-        <div className="h-6 bg-slate-200 rounded-full w-20" />
-        <div className="h-6 bg-slate-200 rounded-full w-16" />
-        <div className="h-6 bg-slate-200 rounded-full w-24" />
+        <div className="h-6 bg-slate-200/90 rounded-full w-20" />
+        <div className="h-6 bg-slate-200/90 rounded-full w-16" />
+        <div className="h-6 bg-slate-200/90 rounded-full w-24" />
       </div>
 
-      {/* Footer */}
       <div className="pt-4 border-t border-slate-200/70 space-y-2">
-        <div className="h-4 bg-slate-200 rounded w-1/2" />
-        <div className="h-4 bg-slate-200 rounded w-2/3" />
+        <div className="h-4 bg-slate-200/90 rounded-lg w-1/2" />
+        <div className="h-4 bg-slate-200/90 rounded-lg w-2/3" />
       </div>
     </div>
   );
@@ -30,27 +26,23 @@ export const IssueCardSkeleton: React.FC = () => {
 // Loading skeleton for event cards
 export const EventCardSkeleton: React.FC = () => {
   return (
-    <div className="ios-card animate-pulse">
-      {/* Title */}
-      <div className="h-5 bg-slate-200 rounded mb-3 w-3/4" />
+    <div className="ios-card animate-pulse bg-white/70">
+      <div className="h-5 bg-slate-200/90 rounded-xl mb-3 w-3/4" />
 
-      {/* Description */}
       <div className="space-y-2 mb-4">
-        <div className="h-4 bg-slate-200 rounded w-full" />
-        <div className="h-4 bg-slate-200 rounded w-5/6" />
+        <div className="h-4 bg-slate-200/90 rounded-lg w-full" />
+        <div className="h-4 bg-slate-200/90 rounded-lg w-5/6" />
       </div>
 
-      {/* Badges */}
       <div className="flex gap-2 mb-4">
-        <div className="h-6 bg-slate-200 rounded-full w-20" />
-        <div className="h-6 bg-slate-200 rounded-full w-20" />
+        <div className="h-6 bg-slate-200/90 rounded-full w-20" />
+        <div className="h-6 bg-slate-200/90 rounded-full w-20" />
       </div>
 
-      {/* Footer */}
       <div className="pt-4 border-t border-slate-200/70 space-y-2">
-        <div className="h-4 bg-slate-200 rounded w-2/3" />
-        <div className="h-4 bg-slate-200 rounded w-1/2" />
-        <div className="h-4 bg-slate-200 rounded w-2/5" />
+        <div className="h-4 bg-slate-200/90 rounded-lg w-2/3" />
+        <div className="h-4 bg-slate-200/90 rounded-lg w-1/2" />
+        <div className="h-4 bg-slate-200/90 rounded-lg w-2/5" />
       </div>
     </div>
   );

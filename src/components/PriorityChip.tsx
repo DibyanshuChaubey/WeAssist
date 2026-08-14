@@ -5,36 +5,32 @@ interface PriorityChipProps {
   priority?: Priority | string;
 }
 
-const priorityConfig: Record<Priority, { bg: string; text: string; icon: boolean; label: string }> = {
+const priorityConfig: Record<Priority, { badge: string; label: string; icon: boolean }> = {
   high: {
-    bg: 'bg-red-100/80 border border-red-200/80',
-    text: 'text-red-800',
-    icon: true,
+    badge: 'bg-rose-50/90 text-rose-700 ring-1 ring-inset ring-rose-200/80',
     label: 'High',
+    icon: true,
   },
   medium: {
-    bg: 'bg-amber-100/80 border border-amber-200/80',
-    text: 'text-orange-800',
-    icon: false,
+    badge: 'bg-amber-50/90 text-amber-700 ring-1 ring-inset ring-amber-200/80',
     label: 'Medium',
+    icon: false,
   },
   low: {
-    bg: 'bg-slate-100/80 border border-slate-200/80',
-    text: 'text-gray-800',
-    icon: false,
+    badge: 'bg-slate-50/90 text-slate-700 ring-1 ring-inset ring-slate-200/80',
     label: 'Low',
+    icon: false,
   },
 };
 
 export const PriorityChip: React.FC<PriorityChipProps> = ({ priority }) => {
-  // Handle undefined or invalid priority values
   const normalizedPriority = priority?.toLowerCase() as Priority;
   const config = priorityConfig[normalizedPriority] || priorityConfig.low;
 
   return (
-    <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-semibold ${config.bg} ${config.text}`}>
-      {config.icon && <AlertCircle size={16} />}
+    <span className={`glass-pill text-xs sm:text-sm ${config.badge}`}>
+      {config.icon && <AlertCircle size={14} className="shrink-0" />}
       {config.label}
-    </div>
+    </span>
   );
 };

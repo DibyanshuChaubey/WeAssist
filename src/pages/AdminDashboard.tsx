@@ -17,7 +17,6 @@ const API_URL = getApiBaseUrl();
 const ISSUES_PER_PAGE = 6;
 
 export const AdminDashboard: React.FC = () => {
-  // const { currentUser } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStatus, setSelectedStatus] = useState<Status | 'all'>('all');
   const [selectedPriority, setSelectedPriority] = useState<Priority | 'all'>('all');
@@ -25,7 +24,7 @@ export const AdminDashboard: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const { token } = useAuth();
   const [issues, setIssues] = useState<HostelIssue[]>([]);
-  // Fetch issues from backend
+
   useEffect(() => {
     if (!token) return;
     fetch(`${API_URL}/issues`, {
@@ -36,7 +35,6 @@ export const AdminDashboard: React.FC = () => {
       .catch(() => setIssues([]));
   }, [token]);
 
-  // Filter and sort issues
   const filteredAndSortedIssues = useMemo(() => {
     const filtered = filterIssues(issues, {
       searchQuery,
@@ -47,24 +45,15 @@ export const AdminDashboard: React.FC = () => {
     return getSortedIssues(filtered);
   }, [issues, searchQuery, selectedStatus, selectedPriority, selectedCategory]);
 
-  // Pagination
   const totalPages = Math.ceil(filteredAndSortedIssues.length / ISSUES_PER_PAGE);
   const paginatedIssues = filteredAndSortedIssues.slice(
     (currentPage - 1) * ISSUES_PER_PAGE,
     currentPage * ISSUES_PER_PAGE
   );
 
-  // Statistics
-  const stats = useMemo(
-    () => getStats(issues),
-    [issues]
-  );
+  const stats = useMemo(() => getStats(issues), [issues]);
+  const pendingConfirmation = issues.filter((issue) => issue.status === 'resolved_by_admin').length;
 
-  const pendingConfirmation = issues.filter(
-    (issue) => issue.status === 'resolved_by_admin'
-  ).length;
-
-  // Handlers
   const handleMarkResolved = async (issueId: string, note: string) => {
     try {
       const res = await fetch(`${API_URL}/issues/${issueId}/mark-resolved`, {
@@ -87,9 +76,7 @@ export const AdminDashboard: React.FC = () => {
     try {
       const res = await fetch(`${API_URL}/issues/${issueId}/confirm-resolution`, {
         method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) throw new Error('Failed to confirm resolution');
       const data = await res.json();
@@ -110,119 +97,89 @@ export const AdminDashboard: React.FC = () => {
   return (
     <>
       <Navigation />
-      <main className="container-padded max-w-7xl mx-auto py-8 space-y-8">
-      {/* Header */}
-      <Header
-        title="Admin Issue Management"
-        subtitle="Manage hostel issues, add notes, and track resolution status"
-        icon={BarChart3}
-      />
-
-      {/* Statistics Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
-          <div className="flex items-center justify-between">
+      <main className="container-padded mx-auto max-w-7xl space-y-8 py-8">
+        <div className="ios-surface-strong rounded-[30px] p-6 sm:p-8">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Total Issues</p>
-              <p className="text-3xl font-bold text-gray-900 mt-1">{stats.total}</p>
-            </div>
-            <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center">
-              <AlertCircle className="text-blue-600" size={24} />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Reported</p>
-              <p className="text-3xl font-bold text-red-600 mt-1">{stats.reported}</p>
-            </div>
-            <div className="w-12 h-12 rounded-lg bg-red-100 flex items-center justify-center">
-              <AlertCircle className="text-red-600" size={24} />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Pending Confirmation</p>
-              <p className="text-3xl font-bold text-yellow-600 mt-1">{pendingConfirmation}</p>
-            </div>
-            <div className="w-12 h-12 rounded-lg bg-yellow-100 flex items-center justify-center">
-              <Clock className="text-yellow-600" size={24} />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Closed</p>
-              <p className="text-3xl font-bold text-green-600 mt-1">{stats.closed}</p>
-            </div>
-            <div className="w-12 h-12 rounded-lg bg-green-100 flex items-center justify-center">
-              <CheckCircle2 className="text-green-600" size={24} />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Filter Bar */}
-      <FilterBar
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        selectedStatus={selectedStatus}
-        onStatusChange={setSelectedStatus}
-        selectedPriority={selectedPriority}
-        onPriorityChange={setSelectedPriority}
-        selectedCategory={selectedCategory}
-        onCategoryChange={setSelectedCategory}
-        onReset={handleReset}
-      />
-
-      {/* Issues Grid */}
-      {paginatedIssues.length === 0 ? (
-        <EmptyState
-          title="No issues found"
-          description={
-            filteredAndSortedIssues.length === 0
-              ? 'No issues match your filters. Try adjusting your search criteria.'
-              : 'All issues have been resolved!'
-          }
-        />
-      ) : (
-        <>
-          <div className="grid gap-4">
-            {paginatedIssues.map((issue) => (
-      <IssueCard
-                key={issue.id}
-                issue={issue}
-                onMarkResolved={(issueId) => handleMarkResolved(issueId, '')}
-                onConfirmResolution={handleConfirmResolution}
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-600">Operations center</p>
+              <Header
+                title="Admin Issue Management"
+                subtitle="Manage hostel issues, add notes, and track resolution status"
+                icon={BarChart3}
               />
-            ))}
+            </div>
+            <div className="rounded-2xl border border-slate-200/80 bg-white/65 px-4 py-3 text-sm text-slate-700 backdrop-blur-sm">
+              Live queue • {issues.length} items
+            </div>
           </div>
+        </div>
 
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-            />
-          )}
-        </>
-      )}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            { label: 'Total Issues', value: stats.total, accent: 'bg-blue-100 text-blue-600', icon: AlertCircle },
+            { label: 'Reported', value: stats.reported, accent: 'bg-red-100 text-red-600', icon: AlertCircle },
+            { label: 'Pending Confirmation', value: pendingConfirmation, accent: 'bg-amber-100 text-amber-600', icon: Clock },
+            { label: 'Closed', value: stats.closed, accent: 'bg-green-100 text-green-600', icon: CheckCircle2 },
+          ].map(({ label, value, accent, icon: Icon }) => (
+            <div key={label} className="ios-surface rounded-[26px] p-4">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-sm font-medium text-slate-600">{label}</p>
+                  <p className="mt-2 text-3xl font-black tracking-tight text-slate-900">{value}</p>
+                </div>
+                <div className={`flex h-12 w-12 items-center justify-center rounded-2xl ${accent}`}>
+                  <Icon size={24} />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
 
-      {/* Info Box */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <p className="text-sm text-blue-900">
-          <strong>Dual-Verification Workflow:</strong> When you mark an issue as "Resolved", the hostel student (reporter) will receive a notification to confirm the resolution. The issue won't close until they verify that the problem is actually fixed.
-        </p>
-      </div>
-    </main>
+        <FilterBar
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          selectedStatus={selectedStatus}
+          onStatusChange={setSelectedStatus}
+          selectedPriority={selectedPriority}
+          onPriorityChange={setSelectedPriority}
+          selectedCategory={selectedCategory}
+          onCategoryChange={setSelectedCategory}
+          onReset={handleReset}
+        />
+
+        {paginatedIssues.length === 0 ? (
+          <EmptyState
+            title="No issues found"
+            description={
+              filteredAndSortedIssues.length === 0
+                ? 'No issues match your filters. Try adjusting your search criteria.'
+                : 'All issues have been resolved!'
+            }
+          />
+        ) : (
+          <>
+            <div className="grid gap-4">
+              {paginatedIssues.map((issue) => (
+                <IssueCard
+                  key={issue.id}
+                  issue={issue}
+                  onMarkResolved={(issueId) => handleMarkResolved(issueId, '')}
+                  onConfirmResolution={handleConfirmResolution}
+                />
+              ))}
+            </div>
+
+            {totalPages > 1 && (
+              <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+            )}
+          </>
+        )}
+
+        <div className="rounded-[24px] border border-blue-200 bg-blue-50/80 p-4 text-sm text-blue-900">
+          <strong>Dual-Verification Workflow:</strong> When you mark an issue as resolved, the reporting student must confirm the fix before the issue closes.
+        </div>
+      </main>
     </>
   );
 };
+
