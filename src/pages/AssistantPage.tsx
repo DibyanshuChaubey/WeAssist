@@ -103,24 +103,26 @@ export const AssistantPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Quick Prompts */}
+        {/* Quick Prompts - Horizontally Scrollable */}
         <div className="space-y-3">
           <p className="px-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Quick questions</p>
-          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-            {QUICK_PROMPTS.map((prompt) => (
-              <button
-                key={prompt}
-                type="button"
-                onClick={() => sendMessage(prompt)}
-                className="group relative overflow-hidden rounded-2xl border border-blue-200/60 bg-gradient-to-br from-blue-50 to-indigo-50 px-4 py-3 text-left text-sm font-medium text-blue-900 shadow-sm transition-all hover:border-blue-300/80 hover:shadow-md active:translate-y-[1px]"
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 transition-opacity group-hover:opacity-30" />
-                <span className="relative flex items-center gap-2">
-                  <span className="text-base">✨</span>
-                  {prompt}
-                </span>
-              </button>
-            ))}
+          <div className="overflow-x-auto scrollbar-hide">
+            <div className="flex gap-2 pb-2">
+              {QUICK_PROMPTS.map((prompt) => (
+                <button
+                  key={prompt}
+                  type="button"
+                  onClick={() => sendMessage(prompt)}
+                  className="group relative shrink-0 overflow-hidden rounded-2xl border border-blue-200/60 bg-gradient-to-br from-blue-50 to-indigo-50 px-4 py-3 text-left text-sm font-medium text-blue-900 shadow-sm transition-all hover:border-blue-300/80 hover:shadow-md active:translate-y-[1px] whitespace-nowrap min-w-max"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 transition-opacity group-hover:opacity-30" />
+                  <span className="relative flex items-center gap-2">
+                    <span className="text-base">✨</span>
+                    {prompt}
+                  </span>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
