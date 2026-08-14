@@ -63,38 +63,42 @@ export const Navigation: React.FC = () => {
           </Link>
 
           {/* Desktop Navigation Links */}
-          <div className="hidden md:flex items-center gap-1 lg:gap-2 flex-1 justify-center min-w-0 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden px-1">
-            {isAuthenticated && (
-              <>
-                {navLinks.map((link) => {
-                  const Icon = link.icon;
-                  return (
-                    <Link
-                      key={link.to}
-                      to={link.to}
-                      className={standardLinkClass(link.to, link.activeClass)}
-                      title={link.label}
-                    >
-                      <Icon size={18} />
-                      <span className="hidden lg:inline">{link.label}</span>
-                    </Link>
-                  );
-                })}
+          <div className="hidden md:flex flex-1 min-w-0 items-center justify-center px-1">
+            <div className="w-full overflow-x-auto scrollbar-hide">
+              <div className="flex min-w-max items-center justify-center gap-1 lg:gap-2">
+                {isAuthenticated && (
+                  <>
+                    {navLinks.map((link) => {
+                      const Icon = link.icon;
+                      return (
+                        <Link
+                          key={link.to}
+                          to={link.to}
+                          className={standardLinkClass(link.to, link.activeClass)}
+                          title={link.label}
+                        >
+                          <Icon size={18} />
+                          <span className="hidden lg:inline">{link.label}</span>
+                        </Link>
+                      );
+                    })}
 
-                <Link to="/assistant" className={assistantLinkClass(false)} title="Open AI Assistant">
-                  <span className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.35),transparent_45%)]" />
-                  <MessageSquare size={16} className="relative" />
-                  <span className="text-sm relative hidden lg:inline">Assistant</span>
-                  <span
-                    className={`relative hidden lg:inline-flex items-center rounded-full px-1.5 py-0.5 text-[9px] font-bold tracking-wide ${
-                      isActive('/assistant') ? 'bg-white/20 text-white' : 'bg-violet-100 text-violet-700'
-                    }`}
-                  >
-                    AI
-                  </span>
-                </Link>
-              </>
-            )}
+                    <Link to="/assistant" className={assistantLinkClass(false)} title="Open AI Assistant">
+                      <span className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.35),transparent_45%)]" />
+                      <MessageSquare size={16} className="relative" />
+                      <span className="text-sm relative hidden lg:inline">Assistant</span>
+                      <span
+                        className={`relative hidden lg:inline-flex items-center rounded-full px-1.5 py-0.5 text-[9px] font-bold tracking-wide ${
+                          isActive('/assistant') ? 'bg-white/20 text-white' : 'bg-violet-100 text-violet-700'
+                        }`}
+                      >
+                        AI
+                      </span>
+                    </Link>
+                  </>
+                )}
+              </div>
+            </div>
           </div>
 
           {/* Right Section - User Profile / Login */}
